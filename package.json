@@ -1,0 +1,24 @@
+{
+  "name": "discord-xa",
+  "version": "1.0.0",
+  "description": "Un bot discord gèrant des commandes",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpicKiwi/discord-xa.git"
+  },
+  "author": "EpicKiwi <me@epickiwi.fr>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EpicKiwi/discord-xa/issues"
+  },
+  "homepage": "https://github.com/EpicKiwi/discord-xa#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "discord.js": "^11.1.0",
+    "fs-extra": "^3.0.1"
+  }
+}
