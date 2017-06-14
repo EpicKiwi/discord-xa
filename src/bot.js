@@ -1,6 +1,8 @@
 const Discord = require("discord.js")
 const settings = require("./settings")
 const logger = require("./logger")
+const CommandError = require("./CommandError")
+const CommandManager = require("./commandManager")
 
 module.exports = {
 
@@ -14,7 +16,7 @@ module.exports = {
 
 		this.startRegex = new RegExp(`^${settings["command-start"]}(.*)`)
 
-		if(!this.token || this.token == ""){
+		if(!this.token || this.token === ""){
 			throw new Error("You need to specify a discord token")
 		}
 
@@ -22,7 +24,7 @@ module.exports = {
 
 		this.client.on('message', (message) => {
 			this.onMessage(message)
-		});
+		})
 	},
 
 	onMessage(message){
@@ -31,9 +33,17 @@ module.exports = {
 			let fullCommand = regexResult[1].trim()
 			let args = fullCommand.split(" ")
 			try {
-				commandManager.execCommand(args)
+			    logger.info(`Command issued : ${fullCommand}`)
+				let commandResult = CommandManager.getCommand(args)
+                commandResult.message = message
+                commandResult.command.execute(commandResult)
 			} catch(e) {
-				logger.warn(`Unknown command for "${fullCommand}"`)
+				if(e instanceof CommandError) {
+				    message.channel.send(`**Erreur :** ${e.message}`)
+                } else {
+				    console.error(e)
+                    logger.error(`Error during execution of command "${fullCommand} : ${e.message}`)
+                }
 			}
 		}
 	},

@@ -1,9 +1,14 @@
 const Command = require("../Command")
 
-const com = new Command("ping",["logger"])
+const com = new Command("ping")
 
-com.execute = (args,message)=>{
-	com.logger.info("Pingged")
+com.execute = (commandResult)=>{
+	let message = commandResult.message
+	let args = commandResult.args
+	if(args[0])
+		message.channel.send(`Pong ${args[0]}`)
+	else
+        message.channel.send("Pong")
 }
 
 module.exports = com;
