@@ -7,4 +7,8 @@ module.exports = class CommandResult {
         this.fullArgs = fullArgs;
     }
 
+    reply(message){
+    	this.message.channel.send(message)
+    }
+
 }
