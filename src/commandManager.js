@@ -12,6 +12,8 @@ module.exports = {
 
 	commandsDir: path.join(__dirname,"./commands"),
 
+	ignoredFolders : ["lib"],
+
 	load(){
 		this.loadCommandDir(this.commandsDir,this.commands)
 	},
@@ -26,7 +28,7 @@ module.exports = {
 		commandsDir.forEach((el)=>{
 			let elPath = path.join(dirPath,el)
 			let stats = fs.statSync(elPath)
-			if(stats.isDirectory()){
+			if(stats.isDirectory() && this.ignoredFolders.indexOf(el) == -1){
 				let category = new CommandCategory(el)
 				rootScope.addCategory(category)
 				this.loadCommandDir(elPath,category)
