@@ -53,17 +53,19 @@ module.exports = {
         if(!depth)
             depth = 0
         let next = category.content[args[depth]]
+		let commandArgs = args.slice(0)
         if(next){
             if(next instanceof CommandCategory)
                 return this.getCommand(args,next,depth+1)
             else if(next instanceof Command) {
-                let commandArgs = args.slice(0)
-                commandArgs.splice(0,depth+1)
+		        commandArgs.splice(0,depth+1)
                 return new CommandResult(next, commandArgs, args)
             }
         } else {
-            if(category.default)
-                return new CommandResult(category.default,args.slice(0).splice(0,depth),args,true)
+            if(category.default){
+		        commandArgs.splice(0,depth)
+                return new CommandResult(category.default,commandArgs,args,true)
+            }
             throw new CommandNotFoundError();
         }
     }
