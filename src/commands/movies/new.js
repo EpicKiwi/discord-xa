@@ -11,7 +11,6 @@ com.execute = (commandResult) => {
 	    	com.logger.error(`Error while getting movies : ${error.message}`)
 	    	return; 
 	    }
-	    console.log(results.feed.movie[0])
 	    if(results.feed.movie){
 		    let formatedMovieList = movieDisplay.movieListRender(results.feed.movie,{date:false})
 		    commandResult.reply(`Films en salle actuellement :\n\n${formatedMovieList}`)

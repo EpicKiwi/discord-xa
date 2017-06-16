@@ -1,5 +1,7 @@
 exports.movieListRender = function(movieList,options){
 	let response = ""
+	if(!options)
+		options = {}
 
 	movieList.forEach((movie)=>{
 
