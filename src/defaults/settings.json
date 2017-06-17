@@ -1,4 +1,8 @@
 {
 	"discord-token":"YourDiscordTokenHere",
-	"command-start":">"
+	"command-start":">",
+	"spotify": {
+		"username": "YourSpotifyUsername",
+		"password": "YourSpotifyPassword"
+	}
 }

@@ -18,6 +18,8 @@ module.exports = class Command {
 		this.categoryDefault = false;
 	}
 
+	init(){}
+
 	execute(args,message){
 		logger.warn(`Command ${this.name} doesn't implement "execute" function. This command is useless !`)
 	}

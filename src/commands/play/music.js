@@ -1,28 +1,24 @@
 const Command = require("../../Command")
 const path = require("path")
-const ytdl = require("ytdl-core")
+const playlistManager = require("./lib/playlistManager")
 
 const com = new Command("music",["CommandError"])
 
-var voiceConnection = null
-
 com.execute = (commandResult) => {
 	let url = commandResult.args[0]
-	if(!url.match("youtube"))
-		throw new com.CommandError("Vous devez me donner une URL youtube valide")
+	if(!url)
+		throw new com.CommandError("Vous devez donner une URL")
+	if(!commandResult.message.guild)
+		throw new com.CommandError("Vous devez vous trouver sur un serveur avec un channel vocal")
 	let channel = commandResult.message.guild.channels.array().filter((el)=>el.type == 'voice')[0]
 	if(!channel)
 		throw new com.CommandError("Il n'y a pas de channel vocal sur ce serveur")
-	if(voiceConnection)
-		throw new com.CommandError("Je suis déjà connecté a un channel vocal")
-	channel.join().then((connection)=>{
-		let streamDisp = connection.playStream(ytdl(url,{filter:"audioonly"}))
-		voiceConnection = connection
-		streamDisp.once("end",()=>{
-			channel.leave()
-			voiceConnection = null;
-		})
-	})
+	playlistManager.addTrack(commandResult.message.guild,url)
+	commandResult.reply("Titre ajouté à la playlist")
+}
+
+com.init = ()=>{
+	playlistManager.init()
 }
 
 com.categoryDefault = true

@@ -1,6 +1,6 @@
 const fs = require("fs-extra")
 const path = require("path")
-const loadOrDefault = require("./loadordefault").sync
+const loadOrDefault = require("./loadOrDefault").sync
 
 /**
  * Module de chargement et de stockage des paramètres globaux de l'application

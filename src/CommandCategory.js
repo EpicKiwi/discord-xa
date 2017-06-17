@@ -13,6 +13,7 @@ module.exports = class CommandCategory {
 			throw new Error(`${command} is not a valid command`)
 		}
 		this.content[command.name] = command
+		command.init()
 	}
 
 	addCategory(category){
