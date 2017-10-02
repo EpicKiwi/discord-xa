@@ -1,0 +1,10 @@
+[Unit]
+Description=Xa
+After=network.target
+
+[Service]
+type=simple
+ExecStart=node /opt/discord-xa/src/index.js
+
+Restart=always
+RestartSec=30
