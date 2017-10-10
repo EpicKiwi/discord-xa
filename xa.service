@@ -1,6 +1,7 @@
 [Unit]
 Description=Xa
 After=network.target
+User=xa
 
 [Service]
 type=simple
