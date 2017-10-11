@@ -19,9 +19,9 @@
   "dependencies": {
     "allocine-api": "^0.1.9",
     "colors": "^1.1.2",
-    "discord.js": "^11.1.0",
+    "discord.js": "^11.2.1",
     "fs-extra": "^3.0.1",
-    "node-opus": "^0.2.6",
+    "node-opus": "^0.2.7",
     "ytdl-core": "^0.14.4"
   }
 }
