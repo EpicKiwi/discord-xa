@@ -34,7 +34,7 @@ com.functions.formatCategory = function formatCategory(category,path){
 
         }
 
-        result += `**${id}**`
+        result += path != "" ? `**${path} ${id}**` : `**${id}**`
 
         if(category.content[id] instanceof com.CommandCategory){
             result += ` ...`
@@ -78,7 +78,7 @@ com.execute = (commandResult)=>{
             throw new com.CommandError(`Commande ${arg} inconnue`)
     }
 
-    path.trim()
+    path = path.trim()
 
     if(category instanceof com.Command){
         commandResult.reply(com.functions.formatCommand(category,path))
