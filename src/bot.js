@@ -52,7 +52,7 @@ module.exports = {
 		this.client.login(this.token)
 			.then(()=>{
                 if(callback){
-                    this.client.once("ready",()=>callback())
+                    callback()
                 }
 			}).catch((err)=>{
             	logger.error("Unable to start discord Bot")
