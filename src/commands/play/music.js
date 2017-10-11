@@ -4,7 +4,9 @@ const playlistManager = require("./lib/playlistManager")
 
 const com = new Command("music",["CommandError"])
 
+com.description.params = "<url-youtube>"
 com.description.short = "Permet de lire une vidéo youtube sur un channel vocal"
+com.description.long = `Ajoute l'adresse Youtube donnée a la playlist à lire. Cette playlist sera lue dans l'ordre dans le premier salon vocal du serveur.`
 
 com.execute = (commandResult) => {
 	let url = commandResult.args[0]

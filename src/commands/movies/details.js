@@ -4,7 +4,18 @@ const movieDisplay = require("./lib/movieDisplay")
 
 const com = new Command("details",["logger","CommandError"])
 
+com.description.params = "<titre>"
 com.description.short = "Affiche les informations détaillés sur un film"
+com.description.long = `Affiche des informations détaillés sur le film donné dans le paramètre *<titre>*. La recherche est éfféctuée sur le site Allociné et prendra le premier film trouvé.
+
+Les informations affichés sont les suivantes :
+- Titre
+- Type
+- Synopsis
+- Année de sortie
+- Réalisateur
+- Acteurs
+- Affiche`
 
 com.execute = (commandResult) => {
 

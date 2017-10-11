@@ -4,6 +4,18 @@ const com = new Command("help",["commandManager","Command","CommandCategory","Co
 
 com.description.short = "Donne une aide sur chaque commande"
 
+com.description.params = "[commande] [...]"
+com.description.short = "Donne une aide sur chaque commande"
+com.description.long = `Cette commande affiche l'aide disponible pour une commande ou une catégorie de commande.
+
+Les commandes sont organisés en catégories permettant de créer un arboréscence de commandes. Dans l'aide, les commandes sont signalés par le signe :small_orange_diamond:. Les catégories sont signalés par le signe :small_blue_diamond:. Vous pouvez naviguer de catégories en catégories pour en afficher le contenu en donnant le chemin absolu en paramètre de la commande *help*. 
+Chaque catégorie dispose d'une commande par defaut s'éxécutant quand la catégorie est éxécutée. La commande par défaut se distingue des autres commandes par le signe :large_orange_diamond: dans l'aide de la catégorie.
+
+L'aide d'une commande se sépare en 3 parties.
+Le chemin et les paramètres donnent la syntaxe à utiliser pour éxécuter la commande. Les paramètres entre crochets *[]* sont facultatifs quand les paramètres entre chevrons *<>* sont obligatoirs. Le paramètre facultatif *[...]* signifie que l'on peut donner un nombre non définis de paramètres du type précédent.
+La courte déscription donne une description succinte de la commande
+Enfin, la longue description donne tout les details sur l'utilisation de la commande.`
+
 com.functions.formatCategory = function formatCategory(category,path){
     let result = path != "" ?`Aide sur **${path}**` : `Aide général`
     for(let id in category.content){
