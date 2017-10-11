@@ -41,7 +41,7 @@ module.exports = {
 				if(e instanceof CommandError) {
 				    message.channel.send(`**Erreur :** ${e.message}`)
                 } else {
-				    console.error(e)
+				    logger.error(e)
                     logger.error(`Error during execution of command "${fullCommand} : ${e.message}`)
                 }
 			}
@@ -49,9 +49,15 @@ module.exports = {
 	},
 
 	login(callback){
-		if(callback){
-			this.client.once("ready",()=>callback())
-		}
 		this.client.login(this.token)
+			.then(()=>{
+                if(callback){
+                    this.client.once("ready",()=>callback())
+                }
+			}).catch((err)=>{
+            	logger.error("Unable to start discord Bot")
+				logger.error(err.message)
+				process.exit(1)
+			})
 	}
 }
