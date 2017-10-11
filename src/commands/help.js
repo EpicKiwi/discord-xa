@@ -34,10 +34,14 @@ com.functions.formatCategory = function formatCategory(category,path){
 
         }
 
-        result += path != "" ? `**${path} ${id}**` : `**${id}**`
+        result += `**${path} ${id}**`
 
         if(category.content[id] instanceof com.CommandCategory){
+            if(category.content[id].default.description.params)
+                result += ` ${category.content[id].default.description.params}`
             result += ` ...`
+        } else if(category.content[id] instanceof com.Command) {
+            result += ` ${category.content[id].description.params}`
         }
 
         result += `\n\t\t`
