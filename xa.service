@@ -1,11 +1,14 @@
 [Unit]
 Description=Xa
 After=network.target
-User=xa
 
 [Service]
-type=simple
-ExecStart=node /opt/discord-xa/src/index.js
+Type=simple
+ExecStart=/usr/bin/node /home/xa/discord-xa/src/index.js
 
+User=xa
 Restart=always
 RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
