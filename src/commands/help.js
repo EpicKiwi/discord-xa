@@ -56,12 +56,22 @@ com.functions.formatCategory = function formatCategory(category,path){
     return result
 }
 
-com.functions.formatCommand = function formatCategory(command,path) {
+com.functions.formatCommand = function formatCommand(command,path) {
     let result = `Aide sur **${command.name}**`
     result += `\n\n\t:small_orange_diamond: **${path}** ${command.description.params}`
     result +=`\n\t${command.description.short}`
     result += `\n\n${command.description.long}`
     return result
+}
+
+com.functions.sendHelp = function sendHelp(channel,category,path){
+    if(category instanceof com.Command){
+        channel.send(com.functions.formatCommand(category,path))
+    } else if (category instanceof com.CommandCategory){
+        channel.send(com.functions.formatCategory(category,path))
+    } else {
+        throw new com.CommandError("Invalid object to show")
+    }
 }
 
 com.execute = (commandResult)=>{
@@ -84,12 +94,17 @@ com.execute = (commandResult)=>{
 
     path = path.trim()
 
-    if(category instanceof com.Command){
-        commandResult.reply(com.functions.formatCommand(category,path))
-    } else if (category instanceof com.CommandCategory){
-        commandResult.reply(com.functions.formatCategory(category,path))
+    if(commandResult.message.author.dmChannel){
+        com.functions.sendHelp(commandResult.message.author.dmChannel,category,path)
     } else {
-        throw new com.CommandError("Invalid object to show")
+        commandResult.message.author.createDM()
+            .then((channel)=>{
+                com.functions.sendHelp(channel,category,path)
+            })
+    }
+
+    if(commandResult.message.channel.type != "dm"){
+        commandResult.reply("J'ai ouvert l'aide dans votre espace privés")
     }
 }
 
