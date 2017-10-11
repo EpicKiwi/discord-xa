@@ -16,6 +16,12 @@ module.exports = class Command {
 			})
 		}
 		this.categoryDefault = false;
+		this.functions = {}
+		this.description = {
+			short: "Aucune aide sur cette commande",
+			params: "",
+			long: "Il n'y a pas de documentation sur cette commande, veuillez contacter mon responsable :wink:"
+		}
 	}
 
 	init(){}

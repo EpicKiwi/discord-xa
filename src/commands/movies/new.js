@@ -4,6 +4,8 @@ const movieDisplay = require("./lib/movieDisplay")
 
 const com = new Command("new")
 
+com.description.short = "Affiche les films actuellement à l'affiche"
+
 com.execute = (commandResult) => {
 	allocine.api('movielist', {filter: 'nowshowing', order: 'toprank', count:30}, (error, results) => {
 	    if(error) {

@@ -4,6 +4,8 @@ const movieDisplay = require("./lib/movieDisplay")
 
 const com = new Command("search",["logger","CommandError"])
 
+com.description.short = "Recherche un film"
+
 com.execute = function(commandResult){
 	let joinedArgs = commandResult.args.join(" ")
 	if(joinedArgs == ""){

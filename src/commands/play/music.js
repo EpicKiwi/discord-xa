@@ -4,6 +4,8 @@ const playlistManager = require("./lib/playlistManager")
 
 const com = new Command("music",["CommandError"])
 
+com.description.short = "Permet de lire une vidéo youtube sur un channel vocal"
+
 com.execute = (commandResult) => {
 	let url = commandResult.args[0]
 	if(!url)

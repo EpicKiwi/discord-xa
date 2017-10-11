@@ -4,6 +4,8 @@ const movieDisplay = require("./lib/movieDisplay")
 
 const com = new Command("details",["logger","CommandError"])
 
+com.description.short = "Affiche les informations détaillés sur un film"
+
 com.execute = (commandResult) => {
 
 	let joinedArgs = commandResult.args.join(" ")
