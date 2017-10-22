@@ -3,6 +3,7 @@ const settings = require("./settings")
 const logger = require("./logger")
 const CommandError = require("./CommandError")
 const CommandManager = require("./commandManager")
+const webhooks = require("./xio/webhooks/webhooks")
 
 module.exports = {
 
@@ -46,6 +47,7 @@ module.exports = {
                 }
 			}
 		}
+		webhooks.callMessage(message)
 	},
 
 	login(callback){
