@@ -26,7 +26,7 @@ module.exports = class Command {
 
 	init(){}
 
-	execute(args,message){
+	execute(commandResult){
 		logger.warn(`Command ${this.name} doesn't implement "execute" function. This command is useless !`)
 	}
 
