@@ -1,6 +1,6 @@
 {
   "name": "discord-xa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Un bot discord gèrant des commandes",
   "main": "src/index.js",
   "scripts": {
