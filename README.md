@@ -40,6 +40,8 @@ Xa est un bot Discord fonctionnant en ligne de commande et ayant pour but de pro
   * [ ] Le temps passé sur les channels vocaux
 * [ ] Créer un module de configuration server-wide
 * [ ] Recupèrer et afficher des données depuis un service d'open data
+* [ ] Ajouter une commande de reminder permettant d'éxécuter une autre commande dans un temps donné ou à interval régulier
 * [ ] Commande pour afficher l'image of the day Nasa et Bing
+* [ ] Reunir toutes les chaines de carractères dans un même fichier pour pourvoir facilement corriger et traduir
     
     
