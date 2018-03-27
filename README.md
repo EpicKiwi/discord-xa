@@ -15,6 +15,7 @@ Xa est un bot Discord fonctionnant en ligne de commande et ayant pour but de pro
 
 ### Todo list
 
+* [ ] Retravailler la défintion des commandes pour des declarations orientés objet et utilisant les promesses
 * [ ] Revoir le système de lecture de musique
   * [ ] Faire le lien entre un Titre Spotify et une vidéo Youtube pour lire des URL spotify
   * [ ] Ajouter un système *autopilot* pour ajouter des vidéos a la playlist quand celle ci est vide. Les vidéos sont choisis parmis les vidéos proposés par Youtube ou Spotify
@@ -30,7 +31,7 @@ Xa est un bot Discord fonctionnant en ligne de commande et ayant pour but de pro
 * [ ] Ajouter un système de middleware
 * [ ] Créer un middleware permettant d'épingler un message sur une channel différent pour libèrer l'espace d'épinglage
   * [ ] Utiliser la reaction 📌 pour épingler les messages
-  * [ ] Au moins deux personnes doivent ajouter cette réaction pour que le message soit épingler
+  * [ ] Au moins deux personnes doivent ajouter cette réaction pour que le message soit épinglé
 * [ ] Créer un middleware de stats
   * [ ] Le nombre de messages postés
   * [ ] Le temps connecté
