@@ -21,7 +21,7 @@ com.execute = (commandResult) => {
 	    if(results.feed.movie){
 		    let formatedMovieList = movieDisplay.movieListRender(results.feed.movie,{date:false})
 			formatedMovieList.title = "À l'affiche"
-			formatedMovieList.description = "Films en salle actuellement"
+			formatedMovieList.description = "Films en salle actuellement\n"
 		    commandResult.reply("",formatedMovieList)
 		} else {
 		    commandResult.reply(`Il n'y a apparemment aucun film en salle`)
