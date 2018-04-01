@@ -1,6 +1,7 @@
 const allocine = require("allocine-api")
 const Command = require("../../Command")
 const movieDisplay = require("./lib/movieDisplay")
+const Discord = require("discord.js")
 
 const com = new Command("details",["logger","CommandError"])
 
@@ -42,7 +43,7 @@ com.execute = (commandResult) => {
 			    	return;
 			    }
 
-		    	commandResult.reply(movieDisplay.fullMovieRender(results.movie))
+		    	commandResult.reply("",movieDisplay.fullMovieRender(results.movie))
 			})
 		} else {
 		    commandResult.reply(`Aucun résultat pour *${joinedArgs}*`)
