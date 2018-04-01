@@ -1,38 +1,47 @@
 const Discord = require("discord.js")
 
 exports.movieListRender = function(movieList,options){
-	let response = ""
+    let response = {
+        title: "",
+        description: "",
+        color: 4868682,
+        fields: []
+    }
 	if(!options)
 		options = {}
 
 	movieList.forEach((movie)=>{
 
+		let field = {
+			name: "",
+			value: ""
+		}
+
 		if(movie.title){
-			let title = movie.title
-			response += `**${title}**`
+			field.name = movie.title
 		} else if(movie.originalTitle) {
-			let originalTitle = movie.originalTitle
-			response += `**${originalTitle}**`
+            field.name = movie.originalTitle
 		} else {
 			return
 		}
 
 		if(movie.castingShort && movie.castingShort.directors && !(options.directors === false)){
 			let directors = movie.castingShort.directors.split(", ")
-			response += ` de ${directors[0]}`
+			field.value += `de ${directors[0]}`
 		}
 
 		if(movie.release && movie.release.releaseDate && !(options.date === false)){
 			let releaseDate = new Date(movie.release.releaseDate)
-			response += ` sorti en *${releaseDate.getFullYear()}*`
+            field.value += ` sorti en *${releaseDate.getFullYear()}*`
 		} else if (movie.productionYear && !(options.date === false)) {
-			response += ` produit en *${movie.productionYear}*`
+            field.value += ` produit en *${movie.productionYear}*`
 		}
 
-		response += `\n`
+		response.fields.push(field)
+
 	})
 
-	return response
+	return new Discord.RichEmbed(response)
 
 }
 

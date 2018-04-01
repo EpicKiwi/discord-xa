@@ -12,7 +12,7 @@ Les informations affichés sont les suivantes:
 - Réalisateur`
 
 com.execute = (commandResult) => {
-	allocine.api('movielist', {filter: 'nowshowing', order: 'toprank', count:30}, (error, results) => {
+	allocine.api('movielist', {filter: 'nowshowing', order: 'toprank', count:10}, (error, results) => {
 	    if(error) {
 	    	console.error(error); 
 	    	com.logger.error(`Error while getting movies : ${error.message}`)
@@ -20,7 +20,9 @@ com.execute = (commandResult) => {
 	    }
 	    if(results.feed.movie){
 		    let formatedMovieList = movieDisplay.movieListRender(results.feed.movie,{date:false})
-		    commandResult.reply(`Films en salle actuellement :\n\n${formatedMovieList}`)
+			formatedMovieList.title = "À l'affiche"
+			formatedMovieList.description = "Films en salle actuellement"
+		    commandResult.reply("",formatedMovieList)
 		} else {
 		    commandResult.reply(`Il n'y a apparemment aucun film en salle`)
 		}
