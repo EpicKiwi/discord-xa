@@ -104,7 +104,7 @@ com.execute = (commandResult)=>{
     }
 
     if(commandResult.message.channel.type != "dm"){
-        commandResult.reply("J'ai ouvert l'aide dans votre espace privés")
+        commandResult.reply("J'ai ouvert l'aide dans votre espace privé")
     }
 }
 
