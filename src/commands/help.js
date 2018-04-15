@@ -1,4 +1,5 @@
 const Command = require("../Command")
+const Discord = require("discord.js");
 
 const com = new Command("help",["commandManager","Command","CommandCategory","CommandError"])
 
@@ -17,58 +18,83 @@ La courte déscription donne une description succinte de la commande
 Enfin, la longue description donne tout les details sur l'utilisation de la commande.`
 
 com.functions.formatCategory = function formatCategory(category,path){
-    let result = path != "" ?`Aide sur **${path}**` : `Aide général`
+    let result = []
     for(let id in category.content){
 
-        result += `\n\n\t`
+        let currentField = {
+            name: "",
+            value: ""
+        }
 
         if(category.content[id] instanceof com.CommandCategory){
-            result += `:small_blue_diamond: `
+            currentField.name += `:small_blue_diamond: `
         } else if(category.content[id] instanceof com.Command) {
 
             if(category.default === category.content[id]){
-                result += `:large_orange_diamond: `
+                currentField.name += `:large_orange_diamond: `
             } else {
-                result += `:small_orange_diamond: `
+                currentField.name += `:small_orange_diamond: `
             }
 
         }
 
-        result += `**${path} ${id}**`
+        currentField.name += `**${path} ${id}**`
 
         if(category.content[id] instanceof com.CommandCategory){
             if(category.content[id].default.description.params)
-                result += ` ${category.content[id].default.description.params}`
-            result += ` ...`
+                currentField.name += ` ${category.content[id].default.description.params}`
+            currentField.name += ` ...`
         } else if(category.content[id] instanceof com.Command) {
-            result += ` ${category.content[id].description.params}`
+            currentField.name += ` ${category.content[id].description.params}`
         }
-
-        result += `\n\t\t`
 
         if(category.content[id] instanceof com.Command){
-            result += `${category.content[id].description.short}`
+            currentField.value += `${category.content[id].description.short}`
         } else if(category.content[id] instanceof com.CommandCategory) {
-            result += `${category.content[id].default.description.short}`
+            currentField.value += `${category.content[id].default.description.short}`
         }
 
+        result.push(currentField);
     }
-    return result
+    return new Discord.RichEmbed({
+        title: path != "" ?`Aide sur **${path}**` : `Aide général`,
+        color: 4868682,
+        fields: result
+    });
 }
 
 com.functions.formatCommand = function formatCommand(command,path) {
-    let result = `Aide sur **${command.name}**`
-    result += `\n\n\t:small_orange_diamond: **${path}** ${command.description.params}`
-    result +=`\n\t${command.description.short}`
-    result += `\n\n${command.description.long}`
-    return result
+    let paragraphs = command.description.long.split("\n\n")
+        .map((el) => {return {value: el,name:"---"}})
+        .filter((el) => el.value);
+    paragraphs.splice(0,1);
+    let result = new Discord.RichEmbed({
+        title: `Aide sur **${command.name}**`,
+        color: 4868682,
+        fields: [
+            {
+                name: "Structure",
+                value: `:small_orange_diamond: **${path}** ${command.description.params}`
+            },
+            {
+                name: "Description courte",
+                value: command.description.short
+            },
+            {
+                name: "Description complète",
+                value: command.description.long.split("\n")[0]
+            },
+            ...paragraphs
+        ]
+    });
+    return result;
 }
 
 com.functions.sendHelp = function sendHelp(channel,category,path){
     if(category instanceof com.Command){
-        channel.send(com.functions.formatCommand(category,path))
+        channel.send("",com.functions.formatCommand(category,path))
     } else if (category instanceof com.CommandCategory){
-        channel.send(com.functions.formatCategory(category,path))
+        channel.send("",com.functions.formatCategory(category,path))
     } else {
         throw new com.CommandError("Invalid object to show")
     }
@@ -104,7 +130,7 @@ com.execute = (commandResult)=>{
     }
 
     if(commandResult.message.channel.type != "dm"){
-        commandResult.reply("J'ai ouvert l'aide dans votre espace privés")
+        commandResult.reply("J'ai ouvert l'aide dans votre espace privé")
     }
 }
 

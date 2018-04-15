@@ -27,7 +27,9 @@ com.execute = function(commandResult){
 	    }
 	    if(results.feed.movie){
 		    let formatedMovieList = movieDisplay.movieListRender(results.feed.movie)
-		    commandResult.reply(`Résultat de la recherche pour *${joinedArgs}* :\n\n${formatedMovieList}`)
+			formatedMovieList.title = joinedArgs
+			formatedMovieList.description = `Résultat de la recherche pour *${joinedArgs}*\n`;
+		    commandResult.reply("",formatedMovieList)
 		} else {
 		    commandResult.reply(`Aucun résultat pour *${joinedArgs}*`)
 		}

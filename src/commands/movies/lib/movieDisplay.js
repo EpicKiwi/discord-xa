@@ -1,76 +1,101 @@
+const Discord = require("discord.js")
+
 exports.movieListRender = function(movieList,options){
-	let response = ""
+    let response = {
+        title: "",
+        description: "",
+        color: 4868682,
+        fields: []
+    }
 	if(!options)
 		options = {}
 
 	movieList.forEach((movie)=>{
 
+		let field = {
+			name: "",
+			value: ""
+		}
+
 		if(movie.title){
-			let title = movie.title
-			response += `**${title}**`
+			field.name = movie.title
 		} else if(movie.originalTitle) {
-			let originalTitle = movie.originalTitle
-			response += `**${originalTitle}**`
+            field.name = movie.originalTitle
 		} else {
 			return
 		}
 
 		if(movie.castingShort && movie.castingShort.directors && !(options.directors === false)){
 			let directors = movie.castingShort.directors.split(", ")
-			response += ` de ${directors[0]}`
+			field.value += `de ${directors[0]}`
 		}
 
 		if(movie.release && movie.release.releaseDate && !(options.date === false)){
 			let releaseDate = new Date(movie.release.releaseDate)
-			response += ` sorti en *${releaseDate.getFullYear()}*`
+            field.value += ` sorti en *${releaseDate.getFullYear()}*`
 		} else if (movie.productionYear && !(options.date === false)) {
-			response += ` produit en *${movie.productionYear}*`
+            field.value += ` produit en *${movie.productionYear}*`
 		}
 
-		response += `\n`
+		response.fields.push(field)
+
 	})
 
-	return response
+	return new Discord.RichEmbed(response)
 
 }
 
 exports.fullMovieRender = function(movie){
-	let response = ""
+	let response = {
+		title: "",
+		description: "",
+		color: 4868682,
+		fields: []
+	}
 
 	if(movie.title){
 		let title = movie.title
-		response += `**${title}**`
+        response.title += `${title}`
 	} else if(movie.originalTitle) {
 		let originalTitle = movie.originalTitle
-		response += `**${originalTitle}**`
+        response.title += `${originalTitle}`
 	}
 
 	if(movie.movieType){
 		let type = movie.movieType["$"]
-		response += ` - ${type}`
+		response.fields.push({
+			name: "Type",
+			value: type
+		})
 	}
 
 	if(movie.genre){
 		let genres = movie.genre
 		genres = genres.map((genre) => genre["$"])
-		response += ` - ${genres.join(", ")}`
+        response.fields[response.fields.length-1].value += " - "+genres.join(", ")
 	}
-	
-	response += `\n\n`
 
 	if(movie.synopsis){
-		response += `${movie.synopsis.replace(/(<([^>]+)>)/ig,"")}`
+        response.description += `${movie.synopsis.replace(/(<([^>]+)>)/ig,"")}`
 	}else if(movie.synopsisShort){
-		response += `${movie.synopsisShort.replace(/(<([^>]+)>)/ig,"")}`
+        response.description += `${movie.synopsisShort.replace(/(<([^>]+)>)/ig,"")}`
 	}
-	
-	response += `\n\n`
+
+	if(response.description.length > 1024){
+        response.description = response.description.substring(0,1021) + "..."
+	}
 
 	if(movie.release && movie.release.releaseDate){
 		let releaseDate = new Date(movie.release.releaseDate)
-		response += `**Année de sortie** : ${releaseDate.getFullYear()}\n`
+        response.fields.push({
+			name: "Année de sortie",
+			value: `${releaseDate.getFullYear()}`
+		})
 	} else if (movie.productionYear) {
-		response += `**Année de production** : ${movie.productionYear}\n`
+        response.fields.push({
+            name: "Année de sortie",
+            value: `${movie.productionYear}`
+        })
 	}
 
 	if(movie.castMember){
@@ -78,26 +103,36 @@ exports.fullMovieRender = function(movie){
 		let actors = movie.castMember.filter((el)=>el.activity.code == 8001)
 		let directorsNames = directors.map((el)=>el.person.name)
 		if(directorsNames.length > 1){
-			response += `**Réalisateurs** : ${directorsNames.join(", ")}\n`
+            response.fields.push({
+                name: "Réalisateurs",
+                value: `${directorsNames.join(", ")}`
+            })
 		} else if(directorsNames.length == 1){
-			response += `**Réalisateur** : ${directorsNames[0]}\n`
+            response.fields.push({
+                name: "Réalisateur",
+                value: `${directorsNames[0]}`
+            })
 		}
 		if(actors.length > 0){
+            actors.splice(10)
 			let actorsRender = actors.map((actor)=>{
 				if(actor.role)
 					return `*${actor.person.name}* (${actor.role})`
 				else
 					return `${actor.person.name}`
 			})
-			response += `**Acteurs** : ${actorsRender.join(" - ")}`
+            response.fields.push({
+                name: "Acteurs",
+                value: `${actorsRender.join(" - ")}`
+            })
 		}
 	}
-	
-	response += `\n`
 
 	if(movie.poster){
-		response += `**Affiche** : ${movie.poster.href}`
+		response.image = {url:movie.poster.href}
 	}
 
-	return response
+	response.url = movie.link[0].href
+
+	return new Discord.RichEmbed(response);
 }
