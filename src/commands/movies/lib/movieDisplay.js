@@ -130,7 +130,6 @@ exports.fullMovieRender = function(movie){
 
 	if(movie.poster){
 		response.image = {url:movie.poster.href}
-        response.thumbnail = {url:movie.poster.href}
 	}
 
 	response.url = movie.link[0].href
