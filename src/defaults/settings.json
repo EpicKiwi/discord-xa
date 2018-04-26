@@ -1,12 +1,4 @@
 {
 	"discord-token":"YourDiscordTokenHere",
-	"command-start":">",
-	"xio": {
-		"port": 44545,
-		"hostname": "0.0.0.0",
-		"url-prefix": "xio",
-		"apps": {
-			"test": "fr6CL21ig7sT86tLJA9h"
-		}
-	}
+	"command-start":">"
 }

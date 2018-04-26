@@ -1,65 +1,44 @@
 const Discord = require("discord.js")
 const settings = require("./settings")
 const logger = require("./logger")
-const CommandError = require("./CommandError")
-const CommandManager = require("./commandManager")
-const webhooks = require("./xio/webhooks/webhooks")
+const register = require("./register")
+const MessageAction = require("./model/actions/MessageAction")
 
-module.exports = {
+class XaBot {
 
-	client: null,
-	token: null,
-	startRegex: null,
-
-	init(){
-
-		this.token = settings["discord-token"]
-
-		this.startRegex = new RegExp(`^${settings["command-start"]}(.*)`)
-
-		if(!this.token || this.token === ""){
-			throw new Error("You need to specify a discord token")
-		}
-
-		this.client = new Discord.Client();
-
-		this.client.on('message', (message) => {
-			this.onMessage(message)
-		})
-	},
-
-	onMessage(message){
-		let regexResult = this.startRegex.exec(message.content)
-		if(regexResult){
-			let fullCommand = regexResult[1].trim()
-			let args = fullCommand.split(" ")
-			try {
-			    logger.info(`Command issued : ${fullCommand}`)
-				let commandResult = CommandManager.getCommand(args)
-                commandResult.message = message
-                commandResult.command.execute(commandResult)
-			} catch(e) {
-				if(e instanceof CommandError) {
-				    message.channel.send(`**Erreur :** ${e.message}`)
-                } else {
-				    logger.error(e)
-                    logger.error(`Error during execution of command "${fullCommand} : ${e.message}`)
-                }
-			}
-		}
-		webhooks.callMessage(message)
-	},
-
-	login(callback){
-		this.client.login(this.token)
-			.then(()=>{
-                if(callback){
-                    callback()
-                }
-			}).catch((err)=>{
-            	logger.error("Unable to start discord Bot")
-				logger.error(err.message)
-				process.exit(1)
-			})
+	constructor(){
+        this.token = settings["discord-token"]
+        this.startRegex = new RegExp(`^${settings["command-start"]}(.*)`)
+        if(!this.token || this.token === ""){
+            throw new Error("You need to specify a discord token")
+        }
+        this.client = new Discord.Client();
+        this.client.on('message', (message) => {
+            this.onMessage(message)
+        })
 	}
+
+    onMessage(message){
+	    let action = new MessageAction(message)
+        this.executeAction(action)
+    }
+
+    async executeAction(action){
+        for(let middleware of register.middlewares){
+            await middleware.onAction(action)
+        }
+    }
+
+    async login(){
+        try {
+            await this.client.login(this.token)
+        } catch(err){
+            logger.error("Unable to start discord Bot")
+            logger.error(err.message)
+            process.exit(1)
+        }
+    }
+
 }
+
+module.exports = new XaBot()
