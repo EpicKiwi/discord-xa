@@ -1,5 +1,6 @@
 const Command = require("./Command")
 const logger = require('../../../logger')
+const Database = require("../../../Database")
 
 class PingCommand extends Command {
 
@@ -7,15 +8,38 @@ class PingCommand extends Command {
     static getDescription(){return "Renvoie simplement pong"}
     static getCommandName(){return "ping"}
 
-    constructor(contentOrCommand,action){
-        super(contentOrCommand,action)
+    constructor(contentOrCommand,action,middleware){
+        super(contentOrCommand,action,middleware)
+
+        this.defineCollection("pingNames")
     }
 
     async execute(){
-        if(this.args.length > 0){
-            await this.action.reply(`Pong ${this.args.join(" ")}`)
+        let pongName = "Pong"
+        let pingCollection = this.getCollection("pingNames")
+
+        let pongDoc = await pingCollection.findOne({server: this.action.message.guild.id})
+        if(!pongDoc){
+            await pingCollection.insert({server: this.action.message.guild.id,pongName})
         } else {
-            await this.action.reply("Pong")
+            pongName = pongDoc.pongName
+        }
+
+        if(this.args.length >= 2 && this.args[0] == "define"){
+            pongName = this.args.slice(1).join(" ")
+            await pingCollection.update({server: this.action.message.guild.id},{
+                $set: {
+                    pongName
+                }
+            })
+            await this.action.reply(`New pong interaction defined as ${pongName}`)
+            return
+        }
+
+        if(this.args.length > 0){
+            await this.action.reply(`${pongName} ${this.args.join(" ")}`)
+        } else {
+            await this.action.reply(pongName)
         }
     }
 

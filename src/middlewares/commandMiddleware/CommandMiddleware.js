@@ -23,7 +23,7 @@ class CommandMiddleware extends Middleware {
         for(let commandClass of commandRegister.commands){
             let commandMatch = content.match(commandClass.getCommandNameRegex())
             if(commandMatch){
-                action.command = new commandClass(content,action)
+                action.command = new commandClass(content,action,this)
                 logger.info(`Command ${action.command.constructor.getName()} : ${action.command.content}`)
                 await action.command.execute()
                 return

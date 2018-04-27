@@ -1,4 +1,5 @@
 {
 	"discord-token":"YourDiscordTokenHere",
-	"command-start":">"
+	"command-start":">",
+	"data-directory": "data"
 }

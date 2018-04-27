@@ -60,3 +60,6 @@ typings/
 settings.json
 !src/defaults/*
 .idea
+
+/data/*
+!/data/.gitkeep
