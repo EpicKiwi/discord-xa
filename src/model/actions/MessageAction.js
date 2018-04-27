@@ -7,6 +7,10 @@ class MessageAction extends Action {
         this.message = discordMessage
     }
 
+    async reply(...args){
+        await this.message.channel.send(...args)
+    }
+
 }
 
 module.exports = MessageAction
