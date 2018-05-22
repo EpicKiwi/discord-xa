@@ -6,7 +6,7 @@ class Command {
     static getName(){return "Unamed command"}
     static getDescription(){return ""}
     static getCommandName(){return ""}
-    static getCommandNameRegex(){return new RegExp(`^ *${this.getCommandName()} *(.*)$`,"i")}
+    static getCommandNameRegex(){return new RegExp(`^ *${this.getCommandName()} *((?:.|\\r?\\n)*)$`,"im")}
 
     constructor(content, action, middleware){
         this.content = content

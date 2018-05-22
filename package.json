@@ -26,6 +26,7 @@
     "nedb-promise": "^2.0.1",
     "node-opus": "^0.2.7",
     "nodemon": "^1.17.3",
+    "notevil": "^1.1.0",
     "request": "^2.83.0",
     "ytdl-core": "^0.14.4"
   }

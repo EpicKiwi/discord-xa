@@ -8,7 +8,7 @@ class CommandMiddleware extends Middleware {
 
     constructor(){
         super()
-        this.commandRegex = new RegExp(`^ *${settings["command-start"]} *(.*) *$`,"i")
+        this.commandRegex = new RegExp(`^ *${settings["command-start"]} *(.*) *$`,"im")
     }
 
     async onAction(action){
@@ -25,14 +25,12 @@ class CommandMiddleware extends Middleware {
             if(commandMatch){
                 action.command = new commandClass(content,action,this)
                 logger.info(`Command ${action.command.constructor.getName()} : ${action.command.content}`)
-                action.message.channel.startTyping(5000)
                 try {
                     await action.command.execute()
                 } catch(e) {
-                    action.message.channel.stopTyping()
+                    action.reply("**Erreur fatale** interne durant l'execution de la commande")
                     throw e
                 }
-                action.message.channel.stopTyping()
                 return
             }
         }
