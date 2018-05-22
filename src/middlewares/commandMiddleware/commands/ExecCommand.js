@@ -9,7 +9,9 @@ class PingCommand extends Command {
 
     constructor(contentOrCommand,action,middleware){
         super(contentOrCommand,action,middleware)
-        this.async = this.args[0] == "async"
+        this.async = this.args.indexOf("async") > -1
+        this.raw = this.args.indexOf("raw") > -1
+        this.contextArgs = this.args.filter((el) => el != "async" && el != "raw")
     }
 
     async execute(){
@@ -44,20 +46,20 @@ class PingCommand extends Command {
             Buffer,
             Promise,
             setTimeout,
-            setInterval
+            setInterval,
+            JSON,
+            args: this.contextArgs
         }
 
         let functionFactory = notevil.FunctionFactory(context)
 
         try {
-
             if(this.async){
                 let fun = functionFactory("callback",code)
                 fun((result) => {this.resolve(finalResult,result)})
             } else {
                 result = functionFactory(code)()
             }
-
         } catch(e) {
             finalResult += `!! Erreur : ${e.message}\n`
         }
@@ -71,7 +73,11 @@ class PingCommand extends Command {
         if(result) {
             consoleContent += this.parser(result)
         }
-        return this.action.reply("```json\n"+consoleContent+"```")
+        if(this.raw){
+            return this.action.reply(consoleContent)
+        } else {
+            return this.action.reply("```json\n"+consoleContent+"```")
+        }
     }
 
     parser(content){
