@@ -7,7 +7,7 @@ class MoviesNewsCommand extends Command {
 
     static getName(){return "New movies"}
     static getDescription(){return "Affiche les films actuellement à l'affiche"}
-    static getCommandName(){return "movies news"}
+    static getCommandName(){return "movie news"}
 
     constructor(contentOrCommand,action,middleware){
         super(contentOrCommand,action,middleware)
