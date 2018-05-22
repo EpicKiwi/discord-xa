@@ -1,6 +1,4 @@
 const Command = require("./Command")
-const logger = require('../../../logger')
-const Database = require("../../../Database")
 
 class PingCommand extends Command {
 
