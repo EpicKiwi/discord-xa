@@ -25,7 +25,7 @@ class CommandMiddleware extends Middleware {
             if(commandMatch){
                 action.command = new commandClass(content,action,this)
                 logger.info(`Command ${action.command.constructor.getName()} : ${action.command.content}`)
-                action.message.channel.startTyping()
+                action.message.channel.startTyping(5000)
                 try {
                     await action.command.execute()
                 } catch(e) {
