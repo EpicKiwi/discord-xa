@@ -8,7 +8,6 @@ class MessageAction extends Action {
     }
 
     async reply(...args){
-        console.log(args)
         await this.message.channel.send(...args)
     }
 
