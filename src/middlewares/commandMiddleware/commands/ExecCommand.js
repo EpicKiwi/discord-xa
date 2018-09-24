@@ -46,7 +46,6 @@ class PingCommand extends Command {
             Buffer,
             Promise,
             setTimeout,
-            setInterval,
             JSON,
             args: this.contextArgs
         }
