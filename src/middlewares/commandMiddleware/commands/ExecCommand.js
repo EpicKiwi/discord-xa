@@ -1,7 +1,7 @@
 const Command = require("./Command")
 const notevil = require("notevil")
 
-class PingCommand extends Command {
+class ExecCommand extends Command {
 
     static getName(){return "Exec"}
     static getDescription(){return "Execute un code Javascript et renvoie le resultat"}
@@ -93,4 +93,4 @@ class PingCommand extends Command {
 
 }
 
-module.exports = PingCommand
+module.exports = ExecCommand
