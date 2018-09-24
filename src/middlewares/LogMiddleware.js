@@ -9,7 +9,7 @@ class LogMiddleware extends Middleware {
         this.name = "Log messages in the console"
     }
 
-    async onAction(action){
+    async onMessage(action){
         if(action.isCommand) return
         logger.info(`Message : ${action.message.content}`)
     }

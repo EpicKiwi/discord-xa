@@ -11,7 +11,7 @@ class CommandMiddleware extends Middleware {
         this.commandRegex = new RegExp(`^ *${settings["command-start"]} *(.*) *$`,"im")
     }
 
-    async onAction(action){
+    async onMessage(action){
         if(action.type != "message") return
 
         let match = action.message.content.match(this.commandRegex)

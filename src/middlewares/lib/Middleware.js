@@ -16,6 +16,10 @@ module.exports = class Middleware {
         Database.createCollection(this.constructor.getName())
     }
 
-    async onAction(action){}
+    async onMessage(action){}
+
+    async onReactionAdded(action){}
+
+    async onReactionRemoved(action){}
 
 }
