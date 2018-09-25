@@ -16,11 +16,15 @@ class Database {
         } else if(this.collections[middlewareName][collectionName]) return
         let collectionPath = this.getCollectionPath(middlewareName,collectionName)
         this.collections[middlewareName][collectionName] = new Nedb({filename: collectionPath, autoload: true})
-        logger.info(`Created collection ${collectionPath}`)
+        return this.collections[middlewareName][collectionName]
     }
 
     getCollectionPath(middleware,name){
         return path.resolve(`${__dirname}/../${settings["data-directory"]}/${middleware.toLowerCase()}-${name}.db`)
+    }
+
+    getCollection(middleware,name){
+        this.collections[middleware][name]
     }
 
 }

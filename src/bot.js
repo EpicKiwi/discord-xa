@@ -9,6 +9,9 @@ const ReactionRemoveAction = require("./model/actions/ReactionRemoveAction")
 class XaBot {
 
 	constructor(){
+
+	    this.ready = false
+
         this.token = settings["discord-token"]
         this.startRegex = new RegExp(`^${settings["command-start"]}(.*)`)
         if(!this.token || this.token === ""){
@@ -54,10 +57,20 @@ class XaBot {
     async login(){
         try {
             await this.client.login(this.token)
+            await this.initMiddlewares()
+            await this.client.user.setPresence(
+                { game: { name: 'RA9' }, status: 'online' })
+            this.ready = true
         } catch(err){
             logger.error("Unable to start discord Bot")
             logger.error(err.message)
             process.exit(1)
+        }
+    }
+
+    async initMiddlewares(){
+        for(let middleware of register.middlewares){
+            await middleware.init()
         }
     }
 

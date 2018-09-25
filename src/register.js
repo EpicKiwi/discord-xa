@@ -6,6 +6,7 @@ module.exports = {
     middlewares: [
         new CommandMiddleware(),
         //new LogMiddleware(),
-        new PinMiddleware()
+        new PinMiddleware(),
+        require('./middlewares/octoberMiddleware/OctoberMiddleware')
     ]
 }

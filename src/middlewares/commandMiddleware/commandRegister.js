@@ -5,6 +5,7 @@ module.exports = {
         require("./commands/PingCommand"),
         require("./commands/ExecCommand"),
         require("./commands/maths/computeCommand"),
-        require("./commands/maths/renderCommand")
+        require("./commands/maths/renderCommand"),
+        require("../octoberMiddleware/ItemCommand")
     ]
 }
