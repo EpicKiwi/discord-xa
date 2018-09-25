@@ -16,11 +16,14 @@ class PingCommand extends Command {
         let pongName = "Pong"
         let pingCollection = this.getCollection("pingNames")
 
-        let pongDoc = await pingCollection.findOne({server: this.action.message.guild.id})
-        if(!pongDoc){
-            await pingCollection.insert({server: this.action.message.guild.id,pongName})
-        } else {
-            pongName = pongDoc.pongName
+        if(this.action.message.guild) {
+            let pongDoc = await pingCollection.findOne({server: this.action.message.guild.id})
+
+            if(!pongDoc){
+                await pingCollection.insert({server: this.action.message.guild.id,pongName})
+            } else {
+                pongName = pongDoc.pongName
+            }
         }
 
         if(this.args.length >= 2 && this.args[0] == "define"){
