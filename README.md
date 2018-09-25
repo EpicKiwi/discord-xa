@@ -45,4 +45,6 @@ Xa est un bot Discord fonctionnant en ligne de commande et ayant pour but de pro
 * [ ] Commande pour afficher l'image of the day Nasa et Bing
 * [ ] Reunir toutes les chaines de carractères dans un même fichier pour pourvoir facilement corriger et traduir
     
-    
+# Notes
+
+* [Assets utiles](https://kenney.nl/assets/generic-items)
