@@ -6,7 +6,7 @@ class PinMiddleware extends Middleware {
     constructor(){
         super()
         this.name = "Pinning middleware"
-        this.name = "Pin the messages with the 📍📍:pushpin: emoji📍"
+        this.description = "Pin the messages with the 📍📍:pushpin: emoji📍"
 
         this.pins = ['📌','📍']
     }

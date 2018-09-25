@@ -6,7 +6,7 @@ class LogMiddleware extends Middleware {
     constructor(){
         super()
         this.name = "Logging middleware"
-        this.name = "Log messages in the console"
+        this.description = "Log messages in the console"
     }
 
     async onMessage(action){
