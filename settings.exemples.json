@@ -1,0 +1,45 @@
+{
+	"discord-token":"yourdiscordtoken",
+	"command-start":">",
+	"data-directory": "data",
+	"puppets": [
+		{   "id": "pupetid",
+			"token": "yourpuppettoken"}
+	],
+	"items": [
+
+		{	"name": "Planche à découper",
+			"description": "Une belle planche à découper pouvant aussi servir à applatir la tête de vos ennemis. À utiliser avec parcimonie, surtout que c'est du chêne massif.",
+			"type": "MELEE",
+			"minDamage": 1,
+			"maxDamage": 5,
+			"criticalDamage": 10,
+			"lifetime": 10,
+			"image": "http://xa.epickiwi.fr/generic-items/item-133.png",
+			"dropChances": 3},
+
+		{	"name": "Os",
+			"description": "Heu... qu'est ce que ça fait là ça ? Bon, en tout cas, vous pouvez l'utiliser pour le lancer ça fera peut être mal.",
+			"type": "LAUNCH",
+			"minDamage": 0,
+			"maxDamage": 3,
+			"criticalDamage": 5,
+			"image": "http://xa.epickiwi.fr/generic-items/item-101.png",
+			"dropChances": 5},
+
+		{	"name": "Support à éprouvettes",
+			"description": "Par chance, il y a encore des tubes à essait dessus et vous pouvez tenter de les lancer.",
+			"type": "WEAPON",
+			"minDamage": 2,
+			"maxDamage": 6,
+			"criticalDamage": 10,
+			"lifetime": 3,
+			"image": "http://xa.epickiwi.fr/generic-items/item-109.png",
+			"dropChances": 10}
+
+	],
+	"itemDrop": {
+		"minMessage": 0,
+		"maxMessage": 5
+	}
+}

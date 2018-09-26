@@ -14,14 +14,7 @@ class OctoberMiddleware extends Middleware {
 
         this.restrictedChannels = ["laboratoire-secret"]
         this.tickRate = 1000
-        /*this.drop = {
-            minMessage: 10,
-            maxMessage: 500
-        }*/
-        this.drop = {
-            minMessage: 0,
-            maxMessage: 10
-        }
+        this.drop = settings.itemDrop
 
         this.inventorydb = db.createCollection("OctoberMiddleware","inventory")
         this.monstersdb = db.createCollection("OctoberMiddleware","monsters")
