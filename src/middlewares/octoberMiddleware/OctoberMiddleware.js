@@ -3,6 +3,7 @@ const logger = require("../../logger")
 const db = require("../../Database")
 const settings = require("../../settings")
 const Item = require("./Item")
+const _ = require("lodash")
 
 class OctoberMiddleware extends Middleware {
 
@@ -62,7 +63,7 @@ class OctoberMiddleware extends Middleware {
         let filler = 0
         let objective = Math.random()
 
-        let item = this.items.find((el) => {
+        let item = _.shuffle(this.items).find((el) => {
             filler += el.dropChances / total
             return filler >= objective
         })
