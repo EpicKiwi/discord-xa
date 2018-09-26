@@ -4,6 +4,7 @@ const db = require("../../Database")
 const settings = require("../../settings")
 const Item = require("./Item")
 const _ = require("lodash")
+const PlayerStore = require("../../stores/PlayerStore")
 
 class OctoberMiddleware extends Middleware {
 
@@ -91,33 +92,22 @@ class OctoberMiddleware extends Middleware {
         let user = Array.from(action.reaction.users.values())
             .find((el) => el.id != this.bot.client.user.id)
 
-        this.dropMessages.splice(this.dropMessages.indexOf(dropMessage),1)
-
-        let invDoc = await this.inventorydb.findOne({
+        let player = await PlayerStore.state.findOne({
             server: action.reaction.message.guild.id,
             user: user.id
         })
 
-        if(!invDoc){
-            await this.inventorydb.insert({
-                server: action.reaction.message.guild.id,
-                user: user.id,
-                item: null,
-                lifetime: null
-            })
+        if(!player){
+            player = new PlayerStore.HumanPlayer(action.reaction.message.guild.id,user.id)
         }
 
-        await this.inventorydb.update({
-            server: action.reaction.message.guild.id,
-            user: user.id
-        },{
-            $set: {
-                item: dropMessage.item.name,
-                lifetime: dropMessage.item.lifetime
-            }
-        })
+        this.dropMessages.splice(this.dropMessages.indexOf(dropMessage),1)
 
-        action.reaction.message.channel.send(`${user} possède maintenant l'item **${dropMessage.item.name}**`)
+        player.inventory = dropMessage.item
+
+        await PlayerStore.updatePlayer(player)
+
+        await action.reaction.message.channel.send(`${user} possède maintenant l'item **${dropMessage.item.name}**`)
     }
 
 }
