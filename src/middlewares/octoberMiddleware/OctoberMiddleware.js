@@ -93,8 +93,6 @@ class OctoberMiddleware extends Middleware {
 
         this.dropMessages.splice(this.dropMessages.indexOf(dropMessage),1)
 
-        console.log(this.dropMessages)
-
         let invDoc = await this.inventorydb.findOne({
             server: action.reaction.message.guild.id,
             user: user.id
