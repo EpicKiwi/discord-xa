@@ -12,7 +12,7 @@ class OctoberMiddleware extends Middleware {
         this.messageCount = 0
         this.dropMessages = []
 
-        this.restrictedChannels = ["laboratoire-secret"]
+        this.restrictedChannels = settings.octoberEvent.channelRestriction
         this.tickRate = 1000
         this.drop = settings.itemDrop
 
@@ -103,7 +103,8 @@ class OctoberMiddleware extends Middleware {
             await this.inventorydb.insert({
                 server: action.reaction.message.guild.id,
                 user: user.id,
-                item: null
+                item: null,
+                lifetime: null
             })
         }
 
@@ -112,7 +113,8 @@ class OctoberMiddleware extends Middleware {
             user: user.id
         },{
             $set: {
-                item: dropMessage.item.name
+                item: dropMessage.item.name,
+                lifetime: dropMessage.item.lifetime
             }
         })
 
