@@ -64,6 +64,12 @@ class Item {
         return embed
     }
 
+    clone(){
+        let clone = new Item(this.name)
+        clone = Object.assign(clone,this)
+        return clone
+    }
+
     static fromJson(json){
         if(typeof json == "string"){
             json = JSON.parse(json)
