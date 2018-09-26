@@ -17,12 +17,20 @@ class Player {
         this.inventory = null
     }
 
+    get outOfCombat(){
+        return this.health <= 0
+    }
+
 }
 
 class HumanPlayer extends Player {
     constructor(serverId,userId,maxHealth=100) {
         super(serverId,userId,maxHealth);
         this.type = PlayerType.HUMAN
+    }
+
+    get outOfCombat(){
+        return this.health <= 20
     }
 }
 
@@ -38,6 +46,20 @@ class PlayerStore extends CollectionStore {
 
     constructor(){
         super()
+    }
+
+    parsePlayer(rawPlayer){
+        let player = null
+        switch(rawPlayer.type){
+            case PlayerType.HUMAN:
+                player = new HumanPlayer(rawPlayer.server,rawPlayer.user,rawPlayer.maxHealth)
+                break;
+            case PlayerType.PUPPET:
+                player = new PuppetPlayer(rawPlayer.puppetId,rawPlayer.server,rawPlayer.user,rawPlayer.maxHealth)
+                break;
+        }
+        Object.assign(player,rawPlayer)
+        return player;
     }
 
     async updatePlayer(player){

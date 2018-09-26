@@ -89,6 +89,31 @@ class Item {
         return item
     }
 
+    use(){
+        if(this.lifetime < 1)
+            throw new Error("Can't use a destroyed item")
+
+        let rdm = Math.random()
+
+        let damages = 0
+        let critical = false
+
+        if(rdm > 0.9){
+            critical = true
+            damages = this.criticalDamage
+        } else {
+            damages = Math.round(this.minDamage+((rdm*(this.maxDamage-this.minDamage))/0.9))
+        }
+
+        this.lifetime--
+
+        return {
+            critical,
+            damages,
+            destroyed: this.lifetime < 1
+        }
+    }
+
 }
 
 Item.Type = Type
