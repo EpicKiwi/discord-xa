@@ -9,6 +9,7 @@ module.exports = {
         require("./commands/FunCommand"),
         require("../octoberMiddleware/ItemCommand"),
         require("../octoberMiddleware/InventoryCommand"),
-        require("../octoberMiddleware/UseCommand")
+        require("../octoberMiddleware/UseCommand"),
+        require("../octoberMiddleware/StatusCommand")
     ]
 }

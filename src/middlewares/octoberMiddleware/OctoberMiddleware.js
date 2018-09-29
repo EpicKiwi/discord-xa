@@ -70,7 +70,7 @@ class OctoberMiddleware extends Middleware {
         })
 
         let embed = item.toEmbed();
-        embed.setFooter("Équipez vous de cet item avec ✅ . Cela vous fera perdre votre ancien équipement.")
+        embed.setFooter("Équipez vous de cet item avec ✅. Cela vous fera perdre votre ancien équipement.")
 
         let message = await channel.send(embed)
 

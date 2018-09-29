@@ -32,8 +32,9 @@ class InventoryCommand extends Command {
             return await this.action.reply(`${this.action.message.author}, il semble que votre inventaire contienne l'item **${invDoc.item}** mais je ne connait pas ces caractéristiques...`)
 
         let embed = item.toEmbed()
+        embed.setAuthor(`L'inventaire de ${this.action.message.author.username}`)
 
-        this.action.reply(`L'inventaire de ${this.action.message.author}`,embed)
+        this.action.reply("",embed)
     }
 
 }
