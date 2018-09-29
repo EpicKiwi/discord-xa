@@ -41,5 +41,9 @@
 	"itemDrop": {
 		"minMessage": 0,
 		"maxMessage": 5
+	},
+	"octoberEvent": {
+		"channelRestriction": ["laboratoire-secret"],
+		"regenSpeed": 60000
 	}
 }

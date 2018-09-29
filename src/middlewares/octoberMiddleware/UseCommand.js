@@ -6,7 +6,7 @@ class UseCommand extends Command {
 
     static getName(){return "Utiliser un objet"}
     static getDescription(){return "Permet d'utiliser l'item de son inventaire sur quelqu'un"}
-    static getCommandName(){return "useon"}
+    static getCommandName(){return "use"}
 
     constructor(contentOrCommand,action,middleware){
         super(contentOrCommand,action,middleware)
@@ -66,8 +66,10 @@ class UseCommand extends Command {
 
         targetPlayer.health -= result.damages
 
-        await PlayerStore.updatePlayer(player)
-        await PlayerStore.updatePlayer(targetPlayer)
+        await PlayerStore.updatePlayerAction(player)
+        if(player.user != targetPlayer.user) {
+            await PlayerStore.updatePlayerAction(targetPlayer)
+        }
 
         let message = `${this.action.message.author} utilise **${item.name}** sur `
 

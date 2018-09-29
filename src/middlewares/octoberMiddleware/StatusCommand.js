@@ -40,7 +40,7 @@ class StatusCommand extends Command {
         if(player){
             embed.addField("Santé",`${player.health}/${player.maxHealth}`,true)
             if(player.inventory){
-                embed.addField("Inventaire",player.inventory.name,true)
+                embed.addField("Inventaire",`${player.inventory.name} (${player.inventory.lifetime})`,true)
                 if(isSelf) {
                     embed.setFooter("Tapez `> inventory` pour voir votre inventaire en detail")
                 } else {

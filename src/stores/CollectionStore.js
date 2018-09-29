@@ -13,7 +13,7 @@ class CollectionStore extends Store {
         if(!doc){
             await this.state.insert(selection)
         }
-        await this.state.update(selection,{$set: set})
+        let res = await this.state.update(selection,{$set: set})
     }
 
 }

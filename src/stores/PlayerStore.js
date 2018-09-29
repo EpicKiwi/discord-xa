@@ -62,7 +62,7 @@ class PlayerStore extends CollectionStore {
         return player;
     }
 
-    async updatePlayer(player){
+    async updatePlayerAction(player){
 
         let inventory = null
         if(player.inventory){
@@ -81,6 +81,17 @@ class PlayerStore extends CollectionStore {
             health: player.health,
             inventory
         })
+    }
+
+    async healPlayerAction(user,server,amount){
+        let player = await this.state.findOne({user,server})
+        if(!player)
+            return null
+
+        if(player.health < player.maxHealth){
+            player.health = Math.min(player.maxHealth,player.health+amount)
+            await this.updatePlayerAction(player)
+        }
     }
 
 }

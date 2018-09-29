@@ -17,6 +17,7 @@ class OctoberMiddleware extends Middleware {
         this.restrictedChannels = settings.octoberEvent.channelRestriction
         this.tickRate = 1000
         this.drop = settings.itemDrop
+        this.lastHeal = Date.now()
 
         this.inventorydb = db.createCollection("OctoberMiddleware","inventory")
         this.monstersdb = db.createCollection("OctoberMiddleware","monsters")
@@ -34,6 +35,13 @@ class OctoberMiddleware extends Middleware {
     }
 
     async tick(){
+        if(this.lastHeal+settings.octoberEvent.regenSpeed < Date.now()){
+            let players = await PlayerStore.state.find({type:"HUMAN"})
+            await Promise.all(players.map((el) => {
+                PlayerStore.healPlayerAction(el.user,el.server,1)
+            }))
+            this.lastHeal = Date.now()
+        }
 
     }
 
@@ -105,7 +113,7 @@ class OctoberMiddleware extends Middleware {
 
         player.inventory = dropMessage.item
 
-        await PlayerStore.updatePlayer(player)
+        await PlayerStore.updatePlayerAction(player)
 
         await action.reaction.message.channel.send(`${user} possède maintenant l'item **${dropMessage.item.name}**`)
     }
