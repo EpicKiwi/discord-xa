@@ -5,6 +5,7 @@ const settings = require("../../settings")
 const Item = require("./Item")
 const _ = require("lodash")
 const PlayerStore = require("../../stores/PlayerStore")
+let Monster;
 
 class OctoberMiddleware extends Middleware {
 
@@ -18,15 +19,17 @@ class OctoberMiddleware extends Middleware {
         this.tickRate = 1000
         this.drop = settings.itemDrop
         this.lastHeal = Date.now()
-
-        this.inventorydb = db.createCollection("OctoberMiddleware","inventory")
-        this.monstersdb = db.createCollection("OctoberMiddleware","monsters")
         this.items = settings.items.map((el) => Item.fromJson(el))
+        this.managedMonsters = [];
     }
 
     async init(){
         this.bot = require("../../bot")
         setTimeout(() => this.applyTick(), this.tickRate)
+        this.serverId = Array.from(this.bot.client.guilds.values())[0].id
+        Monster = require("./Monster")
+        await this.restoreMonsters()
+        //setTimeout(() => this.spawnMonster(this.serverId),2000)
     }
 
     async applyTick(){
@@ -42,7 +45,41 @@ class OctoberMiddleware extends Middleware {
             }))
             this.lastHeal = Date.now()
         }
+    }
 
+    async restoreMonsters(){
+        let activeMonsters = await PlayerStore.state.find({type:"MONSTER"})
+        let monsters = activeMonsters.map(PlayerStore.parsePlayer)
+        await Promise.all(monsters.map((el) => el.init()))
+        await Promise.all(monsters.map((el) => el.appear()))
+        this.managedMonsters.push(...monsters)
+        logger.info(`Restored state of ${activeMonsters.length} monsters`)
+    }
+
+    async spawnMonster(serverId){
+        let UsedPuppets = await PlayerStore.state
+            .find({$or:[{type:"PUPPET"},{type:"MONSTER"}]})
+        let puppet = settings.puppets.find((el) => !UsedPuppets.find((up) => up.puppetId == el.id))
+
+        if(!puppet)
+            throw new Error("No puppet available")
+
+        let monster = new Monster(puppet,serverId)
+
+        let filler = 0
+        let objective = Math.random()
+        let total = settings.octoberEvent.monsters.reduce((acc,el) => acc+el.spawnChance,0)
+        let monsterConfig = _.shuffle(settings.octoberEvent.monsters).find((el) => {
+            filler += el.spawnChance / total
+            return filler >= objective
+        })
+        Object.assign(monster,monsterConfig)
+        monster.health = monster.maxHealth
+        await monster.init()
+        await PlayerStore.updatePlayerAction(monster)
+        this.managedMonsters.push(monster)
+        await monster.appear()
+        return monster
     }
 
     async onMessage(action){

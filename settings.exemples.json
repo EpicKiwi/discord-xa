@@ -44,6 +44,41 @@
 	},
 	"octoberEvent": {
 		"channelRestriction": ["laboratoire-secret"],
-		"regenSpeed": 60000
+		"regenSpeed": 60000,
+		"monsters": [
+			{
+				"name": "Zombie",
+				"maxHealth":"20",
+				"strength": {
+					"min": 3,
+					"max": 8,
+					"critical": 12
+				},
+				"speed": 10,
+				"spawnChance":10,
+				"image": "http://xa.epickiwi.fr/zombie-pic.png"},
+			{
+				"name": "Zombie en colère",
+				"maxHealth":"30",
+				"strength": {
+					"min": 5,
+					"max": 15,
+					"critical": 20
+				},
+				"speed": 5,
+				"spawnChance":5,
+				"image": "http://xa.epickiwi.fr/angry-zombie-pic.png"},
+			{
+				"name": "Zombie maitre",
+				"maxHealth":"150",
+				"strength": {
+					"min": 0,
+					"max": 10,
+					"critical": 15
+				},
+				"speed": 15,
+				"spawnChance":1,
+				"image": "http://xa.epickiwi.fr/tank-zombie-pic.png"}
+		]
 	}
 }

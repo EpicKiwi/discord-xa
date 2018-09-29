@@ -1,12 +1,19 @@
 const CollectionStore = require("./CollectionStore")
+let Monster;
+const settings = require("../settings")
 
 const PlayerType = {
     HUMAN: "HUMAN",
     PUPPET: "PUPPET",
+    MONSTER: "MONSTER",
     UNKNOWN: "UNKNOWN"
 }
 
 class Player {
+
+    get excludedProperties(){
+        return []
+    }
 
     constructor(serverId,userId,maxHealth=100){
         this.server = serverId
@@ -57,6 +64,11 @@ class PlayerStore extends CollectionStore {
             case PlayerType.PUPPET:
                 player = new PuppetPlayer(rawPlayer.puppetId,rawPlayer.server,rawPlayer.user,rawPlayer.maxHealth)
                 break;
+            case PlayerType.MONSTER:
+                if(!Monster)
+                    Monster = require("../middlewares/octoberMiddleware/Monster")
+                let puppet = settings.puppets.find((el) => rawPlayer.puppetId == el.id)
+                player = new Monster(puppet,rawPlayer.serverId)
         }
         Object.assign(player,rawPlayer)
         return player;
@@ -64,23 +76,32 @@ class PlayerStore extends CollectionStore {
 
     async updatePlayerAction(player){
 
-        let inventory = null
-        if(player.inventory){
-            inventory = {
-                name: player.inventory.name,
-                lifetime: player.inventory.lifetime
+        let updateObject = {}
+        let persistedKeys = Object.keys(player)
+
+        if(player.excludedProperties)
+            persistedKeys = persistedKeys
+                .filter((el) => player.excludedProperties.indexOf(el) == -1)
+
+        persistedKeys.forEach((key) => {
+            if(key == "inventory"){
+                if(player[key]) {
+                    updateObject.inventory = {
+                        name: player.inventory.name,
+                        lifetime: player.inventory.lifetime
+                    }
+                } else {
+                    updateObject[key] = null
+                }
+            } else {
+                updateObject[key] = player[key]
             }
-        }
+        })
 
         await this.insertOrUpdate({
             server: player.server,
             user: player.user
-        },{
-            type: player.type,
-            maxHealth: player.maxHealth,
-            health: player.health,
-            inventory
-        })
+        },updateObject)
     }
 
     async healPlayerAction(user,server,amount){
