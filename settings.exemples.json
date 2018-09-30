@@ -56,7 +56,7 @@
 				},
 				"speed": 10,
 				"spawnChance":10,
-				"image": "http://xa.epickiwi.fr/zombie-pic.png"},
+				"image": "http://xa.epickiwi.fr/villains/zombie-pic.png"},
 			{
 				"name": "Zombie en colère",
 				"maxHealth":"30",
@@ -67,7 +67,7 @@
 				},
 				"speed": 5,
 				"spawnChance":5,
-				"image": "http://xa.epickiwi.fr/angry-zombie-pic.png"},
+				"image": "http://xa.epickiwi.fr/villains/angry-zombie-pic.png"},
 			{
 				"name": "Zombie maitre",
 				"maxHealth":"150",
@@ -78,7 +78,7 @@
 				},
 				"speed": 15,
 				"spawnChance":1,
-				"image": "http://xa.epickiwi.fr/tank-zombie-pic.png"}
+				"image": "http://xa.epickiwi.fr/villains/tank-zombie-pic.png"}
 		]
 	}
 }

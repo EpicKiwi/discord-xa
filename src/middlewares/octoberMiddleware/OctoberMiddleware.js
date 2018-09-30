@@ -33,11 +33,15 @@ class OctoberMiddleware extends Middleware {
     }
 
     async applyTick(){
-        await this.tick()
+        if(this.bot.ready) {
+            await this.tick()
+        }
         setTimeout(() => this.applyTick(), this.tickRate)
     }
 
     async tick(){
+        await this.purgeDeadMonsters()
+        await this.resolveMonsterAttacks()
         if(this.lastHeal+settings.octoberEvent.regenSpeed < Date.now()){
             let players = await PlayerStore.state.find({type:"HUMAN"})
             await Promise.all(players.map((el) => {
@@ -54,6 +58,77 @@ class OctoberMiddleware extends Middleware {
         await Promise.all(monsters.map((el) => el.appear()))
         this.managedMonsters.push(...monsters)
         logger.info(`Restored state of ${activeMonsters.length} monsters`)
+    }
+
+    async resolveMonsterAttacks(){
+        let activeMonsters = await PlayerStore.state.find({type:"MONSTER"})
+        let availablePlayers = await PlayerStore.state.find({type:"HUMAN"})
+
+        availablePlayers = availablePlayers.map((el) => PlayerStore.parsePlayer(el))
+
+        availablePlayers = availablePlayers.filter((el) => {
+            return !el.outOfCombat && this.bot.client.guilds.get(el.server).members.get(el.user).presence.status == 'online'
+        })
+
+        for(let monster of activeMonsters){
+            if(!monster.lastAttack || monster.lastAttack+(monster.speed*1000) < Date.now()){
+                if(availablePlayers.length > 0) {
+                    let index = Math.floor(availablePlayers.length * Math.random())
+                    let target = availablePlayers[index]
+                    availablePlayers.splice(index, 1)
+                    await this.monsterAttack(PlayerStore.parsePlayer(monster), target)
+                }
+                monster.lastAttack = Date.now()
+                await PlayerStore.updatePlayerAction(monster)
+            }
+        }
+    }
+
+    async monsterAttack(monster,target){
+        let channel = Array.from(this.bot.client.guilds.get(monster.server).channels.values())
+            .find((el) => el.name == settings.octoberEvent.channelRestriction[0])
+        let monsterUser = this.bot.client.guilds.get(monster.server).members.get(monster.user).user
+        let targetUser = this.bot.client.guilds.get(target.server).members.get(target.user).user
+        let attack = await monster.attack()
+
+        target.health -= attack.damages
+        await PlayerStore.updatePlayerAction(target)
+
+        await this.managedMonsters
+            .find((el) => el.user == monster.user && el.server == monster.server)
+            .guild.channels.get(channel.id).send(attack.quote)
+
+        let mess = `${monsterUser} attaque ${targetUser} et lui retire ${attack.damages} points de vie`
+        if(attack.critical)
+            mess += " et **c'est un coup critique**"
+        await channel.send(mess)
+    }
+
+    async purgeDeadMonsters(){
+        let activeMonsters = await PlayerStore.state.find({type:"MONSTER"})
+        let deadMonsters = await Promise.all(activeMonsters.map(async (monster) => {
+            monster = PlayerStore.parsePlayer(monster)
+            if(monster.outOfCombat) {
+                let mmonster = this.managedMonsters.find((el) =>
+                    el.user == monster.user &&
+                    el.server == monster.server)
+                await mmonster.destroy()
+                await PlayerStore.removePlayerAction(monster)
+                return mmonster
+            } else {
+                return null
+            }
+        }))
+
+        deadMonsters = deadMonsters.filter((el) => el != null)
+
+        deadMonsters.forEach((el) => {
+            this.managedMonsters.splice(this.managedMonsters.indexOf(el),1)
+        })
+
+        if(deadMonsters.length > 0){
+            logger.info(`Purged ${deadMonsters.length} dead monsters`)
+        }
     }
 
     async spawnMonster(serverId){

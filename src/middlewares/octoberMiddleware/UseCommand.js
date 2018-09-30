@@ -98,6 +98,13 @@ class UseCommand extends Command {
 
         if(targetPlayer.outOfCombat){
             await this.action.reply(`${target} est hors de combat`)
+            if(targetPlayer.type == "MONSTER"){
+                let mmonster = OctoberMiddleware.managedMonsters.find((el) =>
+                    el.user == targetPlayer.user &&
+                    el.server == targetPlayer.server)
+                if(mmonster)
+                    await mmonster.disapear();
+            }
         }
 
     }

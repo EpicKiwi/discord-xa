@@ -1,6 +1,7 @@
 const PlayerStore = require("../../stores/PlayerStore")
 const Discord = require("discord.js")
 const logger = require("../../logger")
+const monsterQuotes = require("./monsterQuotes")
 
 class Monster extends PlayerStore.PuppetPlayer {
 
@@ -16,12 +17,17 @@ class Monster extends PlayerStore.PuppetPlayer {
         this.type = "MONSTER";
         this.name = null;
         this.image = null;
+        this.lastAttack = Date.now()
         this.strength = {
             min: 0,
             max: 0,
             critical: 0
         }
-        this.speed = 0;
+        this.speed = +Infinity;
+    }
+
+    get guild(){
+        return this.client.guilds.get(this.server)
     }
 
     async init(){
@@ -55,11 +61,42 @@ class Monster extends PlayerStore.PuppetPlayer {
         }
     }
 
+    async attack(){
+        let rdm = Math.random()
+        let damages = 0
+        let critical = false
+
+        if(rdm > 0.9){
+            critical = true
+            damages = this.strength.critical
+        } else {
+            damages = Math.round(this.strength.min+((rdm*(this.strength.max-this.strength.min))/0.9))
+        }
+
+        return {
+            critical,
+            damages,
+            quote: monsterQuotes.generate()
+        }
+    }
+
+    async disapear(){
+        await this.client.user.setPresence({status: 'invisible' })
+    }
+
     async destroy(){
-        await this.client.user.setUsername(this.puppet.id)
-        await this.client.user.setAvatar(null)
-        await this.client.user.setPresence(
-            { game: null, status: 'invisible' })
+        try {
+            if (this.name){
+                await this.guildMember.setNickname(null)
+            }
+            if (this.image){
+                await this.client.user.setAvatar(null)
+            }
+        } catch(e) {
+            logger.error(`Can't reset meta : ${e.message}`)
+        }
+        await this.client.user.setPresence({status: 'invisible' })
+        await this.client.destroy()
     }
 
 }

@@ -104,6 +104,10 @@ class PlayerStore extends CollectionStore {
         },updateObject)
     }
 
+    async removePlayerAction(player){
+        await this.state.remove({user:player.user,server:player.server})
+    }
+
     async healPlayerAction(user,server,amount){
         let player = await this.state.findOne({user,server})
         if(!player)
