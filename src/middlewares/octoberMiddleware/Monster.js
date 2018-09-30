@@ -80,6 +80,10 @@ class Monster extends PlayerStore.PuppetPlayer {
         }
     }
 
+    getQuote(){
+        return monsterQuotes.generate()
+    }
+
     async disapear(){
         await this.client.user.setPresence({status: 'invisible' })
     }

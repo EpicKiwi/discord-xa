@@ -45,6 +45,9 @@ class OctoberMiddleware extends Middleware {
         await this.spawnMonsters()
         await this.purgeDeadMonsters()
         await this.resolveMonsterAttacks()
+        if(Math.random() > settings.octoberEvent.monsterSayChance) {
+            await this.saySomething()
+        }
         if(this.lastHeal+settings.octoberEvent.regenSpeed < Date.now()){
             let players = await PlayerStore.state.find({type:"HUMAN"})
             await Promise.all(players.map((el) => {
@@ -52,6 +55,15 @@ class OctoberMiddleware extends Middleware {
             }))
             this.lastHeal = Date.now()
         }
+    }
+
+    async saySomething(){
+        let monster = this.managedMonsters[Math.floor(this.managedMonsters.length*Math.random())]
+        let channel = Array.from(this.bot.client.guilds.get(this.serverId).channels.values())
+            .find((el) => el.name == settings.octoberEvent.channelRestriction[0])
+        await this.managedMonsters
+            .find((el) => el.user == monster.user && el.server == monster.server)
+            .guild.channels.get(channel.id).send(monster.getQuote())
     }
 
     async spawnMonsters(){

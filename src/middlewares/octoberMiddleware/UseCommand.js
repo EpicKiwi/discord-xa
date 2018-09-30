@@ -55,7 +55,7 @@ class UseCommand extends Command {
         })
 
         if(!targetPlayer){
-            if(targetPlayer.bot){
+            if(target.bot){
                 return await this.action.reply("Inutile d'utiliser votre item sur lui, il ne vous fera rien...")
             } else {
                 targetPlayer = new PlayerStore.HumanPlayer(this.action.message.guild.id,target.id)
@@ -97,7 +97,7 @@ class UseCommand extends Command {
         message += "\n"
 
         if(result.destroyed){
-            message += `${this.action.message.author} a détruit son item **${item.name}**`
+            message += `${this.action.message.author} a détruit son item **${item.name}**\n`
         }
 
         if(targetPlayer.outOfCombat){
