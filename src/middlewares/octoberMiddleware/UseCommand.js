@@ -55,7 +55,11 @@ class UseCommand extends Command {
         })
 
         if(!targetPlayer){
-            targetPlayer = new PlayerStore.HumanPlayer(this.action.message.guild.id,target.id)
+            if(targetPlayer.bot){
+                return await this.action.reply("Inutile d'utiliser votre item sur lui, il ne vous fera rien...")
+            } else {
+                targetPlayer = new PlayerStore.HumanPlayer(this.action.message.guild.id,target.id)
+            }
         } else {
             targetPlayer = PlayerStore.parsePlayer(targetPlayer)
         }
@@ -78,9 +82,9 @@ class UseCommand extends Command {
         else
             message += `${target}`
 
-        await this.action.reply(message)
+        message += "\n"
 
-        message = `${target} `
+        message += `${target} `
 
         if(result.damages == 0)
             message += "ne prend pas de dégats"
@@ -90,21 +94,24 @@ class UseCommand extends Command {
         if(result.critical)
             message += " et **c'est un coup critique !**"
 
-        await this.action.reply(message)
+        message += "\n"
 
         if(result.destroyed){
-            await this.action.reply(`${this.action.message.author} a détruit son item **${item.name}**`)
+            message += `${this.action.message.author} a détruit son item **${item.name}**`
         }
 
         if(targetPlayer.outOfCombat){
-            await this.action.reply(`${target} est hors de combat`)
-            if(targetPlayer.type == "MONSTER"){
-                let mmonster = OctoberMiddleware.managedMonsters.find((el) =>
-                    el.user == targetPlayer.user &&
-                    el.server == targetPlayer.server)
-                if(mmonster)
-                    await mmonster.disapear();
-            }
+            message += `${target} est **hors de combat**`
+        }
+
+        await this.action.reply(message);
+
+        if(targetPlayer.outOfCombat && targetPlayer.type == "MONSTER"){
+            let mmonster = OctoberMiddleware.managedMonsters.find((el) =>
+                el.user == targetPlayer.user &&
+                el.server == targetPlayer.server)
+            if(mmonster)
+                await mmonster.disapear();
         }
 
     }

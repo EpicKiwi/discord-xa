@@ -28,6 +28,8 @@ class StatusCommand extends Command {
             isSelf = target.id == this.action.message.author.id
         }
 
+        let targetMember = this.action.message.channel.guild.members.get(target.id)
+
         let player = await PlayerStore.state.findOne({
             server: this.action.message.guild.id,
             user: target.id
@@ -35,7 +37,7 @@ class StatusCommand extends Command {
 
         let embed = new Discord.RichEmbed()
         embed.setThumbnail(await target.avatarURL)
-        embed.setTitle(target.username)
+        embed.setTitle(targetMember.nickname || target.username)
 
         if(player){
             embed.addField("Santé",`${player.health}/${player.maxHealth}`,true)
