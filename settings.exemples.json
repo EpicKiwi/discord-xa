@@ -45,40 +45,55 @@
 	"octoberEvent": {
 		"channelRestriction": ["laboratoire-secret"],
 		"regenSpeed": 60000,
+		"date": "2018-10-31T23:59:59.000Z",
+		"startFrequency": 86400000,
+		"endFrequency": 1800000,
+		"startsBefore": 864000000,
 		"monsters": [
 			{
-				"name": "Zombie",
+				"name": "Harley Quinn",
 				"maxHealth":"20",
 				"strength": {
 					"min": 3,
 					"max": 8,
 					"critical": 12
 				},
-				"speed": 10,
+				"speed": 120,
 				"spawnChance":10,
-				"image": "http://xa.epickiwi.fr/villains/zombie-pic.png"},
+				"image": "http://xa.epickiwi.fr/villains/harley-quinn.png"},
 			{
-				"name": "Zombie en colère",
+				"name": "Le Sphinx",
 				"maxHealth":"30",
 				"strength": {
 					"min": 5,
 					"max": 15,
 					"critical": 20
 				},
-				"speed": 5,
+				"speed": 60,
 				"spawnChance":5,
-				"image": "http://xa.epickiwi.fr/villains/angry-zombie-pic.png"},
+				"image": "http://xa.epickiwi.fr/villains/sphinx.png"},
 			{
-				"name": "Zombie maitre",
-				"maxHealth":"150",
+				"name": "Double-face",
+				"maxHealth":"50",
 				"strength": {
 					"min": 0,
 					"max": 10,
 					"critical": 15
 				},
-				"speed": 15,
+				"speed": 300,
 				"spawnChance":1,
-				"image": "http://xa.epickiwi.fr/villains/tank-zombie-pic.png"}
-		]
+				"image": "http://xa.epickiwi.fr/villains/two-face.png"}
+		],
+		"finalBoss": {
+			"name": "Le Joker",
+			"maxHealth": "100",
+			"strength": {
+				"min": 5,
+				"max": 10,
+				"critical": 20
+			},
+			"speed":150,
+			"image": "http://xa.epickiwi.fr/villains/joker.png"
+		}
 	}
 }

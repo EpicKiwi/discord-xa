@@ -6,6 +6,7 @@ const Item = require("./Item")
 const _ = require("lodash")
 const PlayerStore = require("../../stores/PlayerStore")
 let Monster;
+const parseMs = require("parse-ms")
 
 class OctoberMiddleware extends Middleware {
 
@@ -19,8 +20,10 @@ class OctoberMiddleware extends Middleware {
         this.tickRate = 1000
         this.drop = settings.itemDrop
         this.lastHeal = Date.now()
+        this.lastSpawn = null
         this.items = settings.items.map((el) => Item.fromJson(el))
         this.managedMonsters = [];
+        this.bossMonster = null;
     }
 
     async init(){
@@ -29,7 +32,6 @@ class OctoberMiddleware extends Middleware {
         this.serverId = Array.from(this.bot.client.guilds.values())[0].id
         Monster = require("./Monster")
         await this.restoreMonsters()
-        //setTimeout(() => this.spawnMonster(this.serverId),2000)
     }
 
     async applyTick(){
@@ -40,6 +42,7 @@ class OctoberMiddleware extends Middleware {
     }
 
     async tick(){
+        await this.spawnMonsters()
         await this.purgeDeadMonsters()
         await this.resolveMonsterAttacks()
         if(this.lastHeal+settings.octoberEvent.regenSpeed < Date.now()){
@@ -48,6 +51,24 @@ class OctoberMiddleware extends Middleware {
                 PlayerStore.healPlayerAction(el.user,el.server,1)
             }))
             this.lastHeal = Date.now()
+        }
+    }
+
+    async spawnMonsters(){
+        let {startsBefore, endFrequency, startFrequency, date} = settings.octoberEvent
+        let countdown = (new Date(date)).getTime() - Date.now()
+        if(countdown < 0){
+            if(!this.bossMonster && countdown > -1800000){
+                this.bossMonster = await this.spawnMonster(this.serverId,settings.octoberEvent.finalBoss)
+            }
+        } else if(countdown < startsBefore){
+            let avancement = countdown/startsBefore
+            let currentFrequency = Math.round(endFrequency+(avancement*(startFrequency-endFrequency)))
+
+            if(!this.lastSpawn || this.lastSpawn+currentFrequency < Date.now()){
+                await this.spawnMonster(this.serverId)
+                this.lastSpawn = Date.now();
+            }
         }
     }
 
@@ -131,7 +152,7 @@ class OctoberMiddleware extends Middleware {
         }
     }
 
-    async spawnMonster(serverId){
+    async spawnMonster(serverId,monsterPreset=null){
         let UsedPuppets = await PlayerStore.state
             .find({$or:[{type:"PUPPET"},{type:"MONSTER"}]})
         let puppet = settings.puppets.find((el) => !UsedPuppets.find((up) => up.puppetId == el.id))
@@ -144,16 +165,25 @@ class OctoberMiddleware extends Middleware {
         let filler = 0
         let objective = Math.random()
         let total = settings.octoberEvent.monsters.reduce((acc,el) => acc+el.spawnChance,0)
-        let monsterConfig = _.shuffle(settings.octoberEvent.monsters).find((el) => {
-            filler += el.spawnChance / total
-            return filler >= objective
-        })
+
+        let monsterConfig;
+
+        if(monsterPreset){
+            monsterConfig = monsterPreset
+        } else {
+            monsterConfig = _.shuffle(settings.octoberEvent.monsters).find((el) => {
+                filler += el.spawnChance / total
+                return filler >= objective
+            })
+        }
+
         Object.assign(monster,monsterConfig)
         monster.health = monster.maxHealth
         await monster.init()
         await PlayerStore.updatePlayerAction(monster)
         this.managedMonsters.push(monster)
         await monster.appear()
+        logger.info(`Spawned monster ${monster.name}`)
         return monster
     }
 
