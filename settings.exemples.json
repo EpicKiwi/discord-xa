@@ -48,6 +48,7 @@
 		"date": "2018-10-31T23:59:59.000Z",
 		"startFrequency": 86400000,
 		"endFrequency": 1800000,
+		"monsterSayChance": 0.95,
 		"startsBefore": 864000000,
 		"monsters": [
 			{
