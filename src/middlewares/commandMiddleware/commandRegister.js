@@ -10,6 +10,7 @@ module.exports = {
         require("../octoberMiddleware/ItemCommand"),
         require("../octoberMiddleware/InventoryCommand"),
         require("../octoberMiddleware/UseCommand"),
-        require("../octoberMiddleware/StatusCommand")
+        require("../octoberMiddleware/StatusCommand"),
+        require("../octoberMiddleware/HealCommand")
     ]
 }

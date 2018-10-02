@@ -82,10 +82,10 @@ class OctoberMiddleware extends Middleware {
 
             if(!this.lastSpawn) {
                 this.lastSpawn = Date.now();
+                console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
             } else if(this.lastSpawn+currentFrequency < Date.now()) {
                 await this.spawnMonster(this.serverId)
                 this.lastSpawn = Date.now();
-            } else {
                 console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
             }
         }
