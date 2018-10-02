@@ -6,7 +6,7 @@ const Item = require("./Item")
 const _ = require("lodash")
 const PlayerStore = require("../../stores/PlayerStore")
 let Monster;
-const parseMs = require("parse-ms")
+const prettyMs = require("pretty-ms")
 
 class OctoberMiddleware extends Middleware {
 
@@ -58,6 +58,9 @@ class OctoberMiddleware extends Middleware {
     }
 
     async saySomething(){
+        if(this.managedMonsters.length < 1)
+            return
+
         let monster = this.managedMonsters[Math.floor(this.managedMonsters.length*Math.random())]
         let channel = Array.from(this.bot.client.guilds.get(this.serverId).channels.values())
             .find((el) => el.name == settings.octoberEvent.channelRestriction[0])
@@ -77,9 +80,13 @@ class OctoberMiddleware extends Middleware {
             let avancement = countdown/startsBefore
             let currentFrequency = Math.round(endFrequency+(avancement*(startFrequency-endFrequency)))
 
-            if(!this.lastSpawn || this.lastSpawn+currentFrequency < Date.now()){
+            if(!this.lastSpawn) {
+                this.lastSpawn = Date.now();
+            } else if(this.lastSpawn+currentFrequency < Date.now()) {
                 await this.spawnMonster(this.serverId)
                 this.lastSpawn = Date.now();
+            } else {
+                console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
             }
         }
     }
@@ -170,7 +177,7 @@ class OctoberMiddleware extends Middleware {
         let puppet = settings.puppets.find((el) => !UsedPuppets.find((up) => up.puppetId == el.id))
 
         if(!puppet)
-            throw new Error("No puppet available")
+            return logger.warn("No more puppet available")
 
         let monster = new Monster(puppet,serverId)
 
