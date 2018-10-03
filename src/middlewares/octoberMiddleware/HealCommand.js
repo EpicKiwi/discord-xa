@@ -43,8 +43,8 @@ class StatusCommand extends Command {
         if(Math.random() > 0.80)
             return await this.action.reply(`Malgré tout ses éfforts, ${this.action.message.author} n'a pas réussi à soigner ${target}`)
 
-        let healAmount = Math.max(player.health+settings.octoberEvent.healAmount,player.maxHealth)
-        player.health = healAmount
+        let healAmount = Math.min(player.health+settings.octoberEvent.healAmount,player.maxHealth) - player.health
+        player.health += healAmount
         await PlayerStore.updatePlayerAction(player)
 
         await this.action.reply(`${this.action.message.author} à soigné ${target} de ${healAmount} points de vie`)
