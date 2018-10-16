@@ -1,6 +1,5 @@
 const Middleware = require("../lib/Middleware")
 const logger = require("../../logger")
-const db = require("../../Database")
 const settings = require("../../settings")
 const Item = require("./Item")
 const _ = require("lodash")
@@ -19,7 +18,6 @@ class OctoberMiddleware extends Middleware {
         this.restrictedChannels = settings.octoberEvent.channelRestriction
         this.tickRate = 1000
         this.drop = settings.itemDrop
-        this.lastHeal = Date.now()
         this.lastSpawn = null
         this.items = settings.items.map((el) => Item.fromJson(el))
         this.managedMonsters = [];
@@ -29,7 +27,8 @@ class OctoberMiddleware extends Middleware {
     async init(){
         this.bot = require("../../bot")
         setTimeout(() => this.applyTick(), this.tickRate)
-        this.serverId = Array.from(this.bot.client.guilds.values())[0].id
+        this.serverId = this.bot.client.guilds.get(settings.octoberEvent.guild).id
+        logger.info(`Starting October event on ${this.serverId}#${settings.octoberEvent.channelRestriction[0]}`)
         Monster = require("./Monster")
         await this.restoreMonsters()
     }
@@ -48,13 +47,6 @@ class OctoberMiddleware extends Middleware {
         if(Math.random() > settings.octoberEvent.monsterSayChance) {
             await this.saySomething()
         }
-        if(this.lastHeal+settings.octoberEvent.regenSpeed < Date.now()){
-            let players = await PlayerStore.state.find({type:"HUMAN"})
-            await Promise.all(players.map((el) => {
-                PlayerStore.healPlayerAction(el.user,el.server,1)
-            }))
-            this.lastHeal = Date.now()
-        }
     }
 
     async saySomething(){
@@ -63,7 +55,7 @@ class OctoberMiddleware extends Middleware {
 
         let monster = this.managedMonsters[Math.floor(this.managedMonsters.length*Math.random())]
         let channel = Array.from(this.bot.client.guilds.get(this.serverId).channels.values())
-            .find((el) => el.name == settings.octoberEvent.channelRestriction[0])
+            .find((el) => el.id == settings.octoberEvent.channelRestriction)
         await this.managedMonsters
             .find((el) => el.user == monster.user && el.server == monster.server)
             .guild.channels.get(channel.id).send(monster.getQuote())

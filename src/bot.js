@@ -60,10 +60,16 @@ class XaBot {
             await this.initMiddlewares()
             await this.client.user.setPresence(
                 { game: null, status: 'online' })
+
+            this.client.guilds.keyArray().forEach((key) => {
+                logger.info(`Present in (${key}) ${this.client.guilds.get(key).name}`)
+            })
+
             this.ready = true
         } catch(err){
             logger.error("Unable to start discord Bot")
             logger.error(err.message)
+            console.trace(err)
             process.exit(1)
         }
     }
