@@ -28,7 +28,7 @@ class OctoberMiddleware extends Middleware {
         this.bot = require("../../bot")
         setTimeout(() => this.applyTick(), this.tickRate)
         this.serverId = this.bot.client.guilds.get(settings.octoberEvent.guild).id
-        logger.info(`Starting October event on ${this.serverId}#${settings.octoberEvent.channelRestriction[0]}`)
+        logger.info(`Starting October event on ${this.serverId}#${settings.octoberEvent.channelRestriction}`)
         Monster = require("./Monster")
         await this.restoreMonsters()
     }
@@ -118,7 +118,7 @@ class OctoberMiddleware extends Middleware {
 
     async monsterAttack(monster,target){
         let channel = Array.from(this.bot.client.guilds.get(monster.server).channels.values())
-            .find((el) => el.name == settings.octoberEvent.channelRestriction[0])
+            .find((el) => el.name == settings.octoberEvent.channelRestriction)
         let monsterUser = this.bot.client.guilds.get(monster.server).members.get(monster.user).user
         let targetUser = this.bot.client.guilds.get(target.server).members.get(target.user).user
         let attack = await monster.attack()
@@ -199,14 +199,16 @@ class OctoberMiddleware extends Middleware {
     }
 
     async onMessage(action){
-        if(this.restrictedChannels.indexOf(action.message.channel.name) == -1)
+        if(this.restrictedChannels != action.message.channel.id) {
             return
+        }
         if(action.message.channel.type != "text")
             return
         if(action.message.author.id == this.bot.client.user.id || action.isCommand)
             return
 
         this.messageCount++
+        logger.log(`${this.messageCount} pulse`);
 
         let chances = Math.max(this.messageCount-this.drop.minMessage,0)/
             this.drop.maxMessage
@@ -239,6 +241,7 @@ class OctoberMiddleware extends Middleware {
         await message.react("❌")
 
         this.dropMessages.push({message:message,item:item})
+        logger.log(`Dropped item ${item.name}`)
     }
 
     async onReactionAdded(action){
