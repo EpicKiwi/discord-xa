@@ -41,7 +41,7 @@ class StatusCommand extends Command {
             return await this.action.reply("Qui ?? Connait pas...")
 
         if(Math.random() > 0.80)
-            return await this.action.reply(`Malgré tout ses éfforts, ${this.action.message.author} n'a pas réussi à soigner ${target}`)
+            return await this.action.reply(`Malgré tout ses efforts, ${this.action.message.author} n'a pas réussi à soigner ${target}`)
 
         let healAmount = Math.min(player.health+settings.octoberEvent.healAmount,player.maxHealth) - player.health
         player.health += healAmount

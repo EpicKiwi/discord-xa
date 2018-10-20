@@ -199,7 +199,7 @@ class OctoberMiddleware extends Middleware {
     }
 
     async onMessage(action){
-        if(this.restrictedChannels != action.message.channel.id) {
+        if(this.serverId != action.message.channel.guild.id) {
             return
         }
         if(action.message.channel.type != "text")
@@ -215,7 +215,8 @@ class OctoberMiddleware extends Middleware {
         let rdm = Math.random()
 
         if(rdm < chances){
-            this.dropItem(action.message.channel)
+            let mainChannel = this.bot.client.guilds.get(this.serverId).channels.get(settings.octoberEvent.channelRestriction)
+            this.dropItem(mainChannel || action.message.channel)
             this.messageCount = 0
         }
 

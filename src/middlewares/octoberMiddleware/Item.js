@@ -9,7 +9,7 @@ const Type = {
 
 const TypeI18n = {
     "MELEE": "Arme de mélée",
-    "LAUNCH": "Arme de lancé",
+    "LAUNCH": "Arme de jet",
     "WEAPON": "Arme à distance"
 }
 
@@ -36,7 +36,7 @@ class Item {
             embed.setThumbnail(this.image)
 
         if(this.description)
-            embed.addField("Déscription",this.description,false)
+            embed.addField("Description",this.description,false)
 
         if(this.type && this.type != Type.UNKNOWN)
             embed.addField("Type",TypeI18n[this.type],true)
