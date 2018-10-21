@@ -1,7 +1,10 @@
 const Module = require("../../core/Module")
 const MessageInputStream = require("../CoreModule/MessageInputStream")
+const MessageOutputStream = require("../CoreModule/MessageOutputStream")
 const {Inject} = require("injection-js")
 const Logger = require("../../core/Logger")
+const {filter} = require("rxjs/operators")
+const discord = require("discord.js")
 
 class LogModule extends Module {
 
@@ -18,8 +21,11 @@ class LogModule extends Module {
     }
 
     async init(){
+
         this.messageInputStream
-            .subscribe((message) => Logger.log(`New message : ${message.content}`))
+            .subscribe((message) => {
+                Logger.log(`New message : ${message.content}`)
+            })
     }
 
 }
