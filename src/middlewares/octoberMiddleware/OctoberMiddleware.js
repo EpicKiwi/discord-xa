@@ -72,10 +72,7 @@ class OctoberMiddleware extends Middleware {
             let avancement = countdown/startsBefore
             let currentFrequency = Math.round(endFrequency+(avancement*(startFrequency-endFrequency)))
 
-            if(!this.lastSpawn) {
-                this.lastSpawn = Date.now();
-                console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
-            } else if(this.lastSpawn+currentFrequency < Date.now()) {
+            if(!this.lastSpawn || this.lastSpawn+currentFrequency < Date.now()) {
                 await this.spawnMonster(this.serverId)
                 this.lastSpawn = Date.now();
                 console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
@@ -118,7 +115,7 @@ class OctoberMiddleware extends Middleware {
 
     async monsterAttack(monster,target){
         let channel = Array.from(this.bot.client.guilds.get(monster.server).channels.values())
-            .find((el) => el.name == settings.octoberEvent.channelRestriction)
+            .find((el) => el.id == settings.octoberEvent.channelRestriction)
         let monsterUser = this.bot.client.guilds.get(monster.server).members.get(monster.user).user
         let targetUser = this.bot.client.guilds.get(target.server).members.get(target.user).user
         let attack = await monster.attack()
