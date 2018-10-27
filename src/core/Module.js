@@ -1,9 +1,9 @@
-const camelcase = require("camelcase")
+const Injectable = require("./Injectable")
 
 /**
  * The base class for module definition
  */
-class Module {
+class Module extends Injectable {
 
     /**
      * Represents the human-displayable name of the module
@@ -31,15 +31,6 @@ class Module {
      */
     static get provides(){
         return []
-    }
-
-    constructor(...params){
-        let parametersNames = this.constructor.parameters.map((el) => camelcase(el.token.name))
-        params.forEach((inst,i) => {
-            if(parametersNames[i]){
-                this[parametersNames[i]] = inst
-            }
-        })
     }
 
     /**
