@@ -5,6 +5,7 @@ const datefns = require("date-fns")
 const dateFr = require("date-fns/locale/fr")
 const {formatToTimeZone} = require("date-fns-timezone")
 const TimezoneDatabase = require("../databases/TimezoneDatabase")
+const {listTimeZones} = require("timezone-support")
 
 module.exports = class TimeCommand extends Command {
 
@@ -25,10 +26,17 @@ module.exports = class TimeCommand extends Command {
         let date = new Date()
         let timeZone = serverDb.get(`user:${user.id}`)
 
+        let selectedTimezone = commandMessage.args.find((el) => el.type == "literal")
+        if(selectedTimezone){
+            selectedTimezone = listTimeZones().find((el) => el.toLowerCase() == selectedTimezone.value.toLowerCase())
+        }
+
         let selectedUser = commandMessage.args.find((el) => el.type == "user")
         let selectedChannel = commandMessage.args.find((el) => el.type == "channel")
 
-        if(selectedUser) {
+        if(selectedTimezone){
+            timeZone = selectedTimezone
+        } else if(selectedUser) {
             timeZone = serverDb.get(`user:${selectedUser.mentioned.id}`)
         }
 
