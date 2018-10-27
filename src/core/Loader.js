@@ -12,11 +12,9 @@ class Loader {
 
     constructor(){
         this.modules = []
-        this.streams = []
     }
 
     async loadAll(){
-        await this.loadStreams()
         await this.loadModules()
     }
 
@@ -33,21 +31,8 @@ class Loader {
         })
     }
 
-    async loadStreams(){
-        let streamsFiles = await pglob(__dirname+"/../modules/**/*Stream.js")
-
-        streamsFiles.forEach((streamFile) => {
-            let stream = require(streamFile)
-            if(!(stream.prototype instanceof Stream)){
-                return Logger.warn(`${path.basename(streamFile)} no loaded, it's not a stream class`)
-            }
-            this.streams.push(stream)
-            Logger.info(`${stream.name} loaded`)
-        })
-    }
-
     createInjector(){
-        let AllServices = [...this.modules,...this.streams]
+        let AllServices = [...this.modules]
         
         this.modules.forEach((mod) => {
             let extra = mod.provides

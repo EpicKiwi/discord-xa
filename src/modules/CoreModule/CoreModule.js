@@ -13,7 +13,7 @@ class CoreModule extends Module {
     static get description(){return "The main module of the Bot sending all messages on streams"}
 
     static get provides(){
-        return [discord.Client]
+        return [discord.Client,MessageInputStream,MessageOutputStream]
     }
     
     static get parameters(){
