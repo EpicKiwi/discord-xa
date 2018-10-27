@@ -60,12 +60,15 @@ class CommandMessage {
                     return LiteralArgument.fromParsed(arg)
             }
         })
-
         this.valid = true
     }
 
     hasSwitch(switchLetter){
         return !!this.args.find((el) => el.type == "switch" && el.value == switchLetter)
+    }
+
+    hasNamed(name){
+        return !!this.args.find((el) => el.type == "named" && el.value == name)
     }
 
     isValid(){

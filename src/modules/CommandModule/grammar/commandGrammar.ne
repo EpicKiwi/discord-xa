@@ -28,7 +28,7 @@ argument	-> value											{% id %}
 			  |namedParam										{% argument("named") %}
 
 # - Stackable sigle letter parameters such as -a -e -zer
-switch		-> "-" char:+
+switch		-> "-" startChar:+
 
 # - Multi letter parameter such as --named --foo
 namedParam  -> "--" literal										{% first %}

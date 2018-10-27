@@ -1,7 +1,7 @@
 module.exports = class NamedArgument {
 
     constructor(value){
-        this.type = "switch";
+        this.type = "named";
         this.value = value;
     }
 
