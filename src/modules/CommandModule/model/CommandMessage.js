@@ -38,8 +38,6 @@ class CommandMessage {
 
         let parsed = parser.results[0]
 
-        console.log(parser.results)
-
         this.commandName = parsed.command
         this.args = parsed.arguments.map((arg) => {
             switch(arg.type){
