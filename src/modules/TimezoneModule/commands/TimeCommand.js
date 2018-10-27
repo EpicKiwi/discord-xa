@@ -25,8 +25,8 @@ module.exports = class TimeCommand extends Command {
         let date = new Date()
         let timeZone = serverDb.get(`user:${user.id}`)
 
-        let selectedUser = commandMessage.args.find((el) => el.type = "user")
-        let selectedChannel = commandMessage.args.find((el) => el.type = "channel")
+        let selectedUser = commandMessage.args.find((el) => el.type == "user")
+        let selectedChannel = commandMessage.args.find((el) => el.type == "channel")
 
         if(selectedUser) {
             timeZone = serverDb.get(`user:${selectedUser.mentioned.id}`)

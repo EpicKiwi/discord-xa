@@ -22,7 +22,7 @@ module.exports = class setTimezoneCommand extends Command {
         let serverDb = this.timezoneDatabase.get(commandMessage.originalMessage.guild.id)
 
         let param = commandMessage.args.find((el) => el.type == "literal");
-        if(!param){
+        if(!param && !commandMessage.hasSwitch("d")){
             this.messageOutputStream.send(commandMessage.originalMessage.channel,
                 "**Erreur** Veuillez renseigner un nom de TimeZone")
             return 1;
