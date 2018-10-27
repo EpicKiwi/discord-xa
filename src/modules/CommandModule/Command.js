@@ -10,7 +10,7 @@ module.exports = class Command extends Injectable {
         return null;
     }
 
-    execute(commandMessage){
+    async execute(commandMessage){
         throw new Error(`Pleay override the "execute" function in ${this.constructor.name}`)
     }
 

@@ -9,6 +9,7 @@ const Command = require("./Command")
 const PingCommand = require("./commands/PingCommand")
 const Logger = require("../../core/Logger");
 const MessageOutputStream = require("../CoreModule/MessageOutputStream")
+const ReactionOutputStream = require("../CoreModule/ReactionOutputStream")
 
 const COMMAND_DELIMITER = "$";
 
@@ -23,7 +24,12 @@ class CommandModule extends Module {
     }
 
     static get parameters(){
-        return [new Inject(MessageInputStream), new Inject(Client), new Inject(Injector), new Inject(MessageOutputStream)]
+        return [
+            new Inject(MessageInputStream),
+            new Inject(Client),
+            new Inject(Injector),
+            new Inject(MessageOutputStream),
+            new Inject(ReactionOutputStream)]
     }
 
     static get provides(){
@@ -58,10 +64,10 @@ class CommandModule extends Module {
                 let command = new CommandMessage(commandString,message)
                 return command
             })
-        ).subscribe((command) => this.executeCommand(command))
+        ).subscribe((command) => this.executeCommand.bind(this)(command))
     }
 
-    executeCommand(commandMessage){
+    async executeCommand(commandMessage){
 
         let channel = commandMessage.originalMessage.channel
 
@@ -73,12 +79,21 @@ class CommandModule extends Module {
             return el.constructor.commandName.toLowerCase() == commandMessage.commandName.toLowerCase()
         })
 
+        let result = 0;
+
         if(command){
             Logger.info(`Issued "${commandMessage.commandName}" command`)
-            command.execute(commandMessage)
+            result = command.execute(commandMessage)
+            if(result instanceof Promise)
+                result = await result;
         } else {
             Logger.warn(`Command "${commandMessage.commandName}" not found`)
             this.messageOutputStream.send(channel,`**Erreur** La commande "${commandMessage.commandName}" n'existe pas`)
+            result = 404;
+        }
+
+        if(result){
+            this.reactionOutputStream.send(commandMessage.originalMessage,'🔴')
         }
     }
 

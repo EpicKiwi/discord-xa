@@ -4,6 +4,7 @@ const {Inject} = require("injection-js")
 const settings = require("../../../settings")
 const MessageInputStream = require("./MessageInputStream")
 const MessageOutputStream = require("./MessageOutputStream")
+const ReactionOutputStream = require("./ReactionOutputStream")
 const Logger = require("../../core/Logger")
 
 class CoreModule extends Module {
@@ -13,11 +14,11 @@ class CoreModule extends Module {
     static get description(){return "The main module of the Bot sending all messages on streams"}
 
     static get provides(){
-        return [discord.Client,MessageInputStream,MessageOutputStream]
+        return [discord.Client,MessageInputStream,MessageOutputStream,ReactionOutputStream]
     }
     
     static get parameters(){
-        return [new Inject(discord.Client), new Inject(MessageInputStream), new Inject(MessageOutputStream)]
+        return [new Inject(discord.Client), new Inject(MessageInputStream), new Inject(MessageOutputStream), new Inject(ReactionOutputStream)]
     }
 
     async init(){
@@ -26,6 +27,7 @@ class CoreModule extends Module {
         Logger.info("Logged in")
         this.client.on("message",this.onMessage.bind(this))
         this.messageOutputStream.subscribe(this.sendMessage.bind(this))
+        this.reactionOutputStream.subscribe(this.reactMessage.bind(this))
     }
 
     onMessage(message){
@@ -34,6 +36,10 @@ class CoreModule extends Module {
 
     sendMessage(messageOutput){
         messageOutput.channel.send(messageOutput.content)
+    }
+
+    reactMessage(reactionOutput){
+        reactionOutput.message.react(reactionOutput.emoji)
     }
 
 }
