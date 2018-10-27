@@ -35,7 +35,7 @@ module.exports = class StatsModule extends Module {
     tick(){
         this.countPresence()
         this.processStats()
-        setTimeout(this.tick,TICK_SIZE)
+        setTimeout(this.tick.bind(this),TICK_SIZE)
     }
 
     getDateToken(){
