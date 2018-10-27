@@ -6,6 +6,10 @@ const Logger = require("./Logger")
 const path = require("path")
 const glob = require("glob")
 
+const CREATED_KEY = "database:created";
+const PERSISTED_KEY = "database:persisted";
+const GLOBAL_NAME = "global";
+
 const pfs = {
     mkdir: util.promisify(fs.mkdir),
     writeFile: util.promisify(fs.writeFile),
@@ -20,6 +24,8 @@ class ServerDatabase {
         this.serverId = serverId
         this.defaults = defaultValues
         this.values = {}
+        this.values[CREATED_KEY] = Date.now()
+        this.values[PERSISTED_KEY] = null
         this.persistDebounce = _.debounce(this.persist.bind(this),1000,{maxWait:60000})
     }
 
@@ -30,12 +36,21 @@ class ServerDatabase {
         return this.values[key]
     }
 
-    set(key,value){
-        this.persistDebounce()
+    set(key,value,options){
+        if(!(options && options.ignorePersist)){
+            this.persistDebounce()
+        }
         return this.values[key] = value
     }
 
+    operate(key,operator){
+        let currentValue = this.get(key)
+        let newValue = operator(currentValue)
+        this.set(key,newValue)
+    }
+
     async persist(){
+        this.set(PERSISTED_KEY,Date.now(),{ignorePersist:true})
         let dataDirectory = settings.dataDir;
 
         try{
@@ -46,7 +61,7 @@ class ServerDatabase {
         }
 
         let filename = `${this.databaseName}-${this.serverId}.json`
-        await pfs.writeFile(path.join(dataDirectory,filename),JSON.stringify(this.values))
+        await pfs.writeFile(path.join(dataDirectory,filename),JSON.stringify(this.values,null,4))
     }
 
     hydrate(values){
@@ -76,6 +91,10 @@ module.exports = class Database {
         return this.servers[serverId]
     }
 
+    getGlobal(){
+        return this.get(GLOBAL_NAME)
+    }
+
     get databaseName(){
         return this.constructor.name
     }
@@ -96,3 +115,10 @@ module.exports = class Database {
     }
 
 }
+
+module.exports.keys = {
+    CREATED_KEY,
+    PERSISTED_KEY
+}
+module.exports.ServerDatabase = ServerDatabase
+module.exports.operators = require("./operators")
