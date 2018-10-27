@@ -74,7 +74,7 @@ literal		-> startChar 										{% id %}
 			  |startChar endChar								{% (d) => [...d[0],...d[1]].join('') %}
 			  |startChar char:+ endChar							{% (d) => [...d[0],...d[1],...d[2]].join('') %}
 char		-> [^ ]
-startChar	-> [^ "'`<]
+startChar	-> [^ "'`<-]
 endChar		-> [^ "'`>]
 anything	-> any:+											{% (d) => d[0].join('') %}
 any			-> [\S\s]

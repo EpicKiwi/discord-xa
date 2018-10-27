@@ -5,6 +5,8 @@ const CodeArgument = require("./argumentTypes/CodeArgument")
 const UserMentionArgument = require("./argumentTypes/UserMentionArgument")
 const RoleMentionArgument = require("./argumentTypes/RoleMentionArgument")
 const ChannelMentionArgument = require("./argumentTypes/ChannelMentionArgument")
+const SwitchArgument = require("./argumentTypes/SwitchArgument")
+const NamedArgument = require("./argumentTypes/NamedArgument")
 
 class CommandMessage {
 
@@ -36,11 +38,17 @@ class CommandMessage {
 
         let parsed = parser.results[0]
 
+        console.log(parser.results)
+
         this.commandName = parsed.command
         this.args = parsed.arguments.map((arg) => {
             switch(arg.type){
                 case "code":
                     return CodeArgument.fromParsed(arg)
+                case "switch":
+                    return SwitchArgument.fromParsed(arg)
+                case "named":
+                    return NamedArgument.fromParsed(arg)
                 case "user":
                     let userMentioned = this.originalMessage.mentions.members.get(arg.value)
                     return UserMentionArgument.fromParsed(arg,userMentioned)
@@ -56,6 +64,10 @@ class CommandMessage {
         })
 
         this.valid = true
+    }
+
+    hasSwitch(switchLetter){
+        return !!this.args.find((el) => el.type == "switch" && el.value == switchLetter)
     }
 
     isValid(){

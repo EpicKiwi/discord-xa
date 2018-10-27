@@ -9,7 +9,8 @@ module.exports = class UserMentionArgument extends LiteralArgument {
     }
 
     static fromParsed(val,mentioned){
-        let newObj = new UserMentionArgument(val.value)
+        let newObj = new UserMentionArgument(mentioned.user.toString())
+        newObj.userId = val.value
         newObj.mentioned = mentioned
         return newObj
     }

@@ -89,7 +89,7 @@ var grammar = {
     {"name": "literal$ebnf$1", "symbols": ["literal$ebnf$1", "char"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "literal", "symbols": ["startChar", "literal$ebnf$1", "endChar"], "postprocess": (d) => [...d[0],...d[1],...d[2]].join('')},
     {"name": "char", "symbols": [/[^ ]/]},
-    {"name": "startChar", "symbols": [/[^ "'`<]/]},
+    {"name": "startChar", "symbols": [/[^ "'`<-]/]},
     {"name": "endChar", "symbols": [/[^ "'`>]/]},
     {"name": "anything$ebnf$1", "symbols": ["any"]},
     {"name": "anything$ebnf$1", "symbols": ["anything$ebnf$1", "any"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},

@@ -9,7 +9,8 @@ module.exports = class ChannelMentionArgument extends LiteralArgument {
     }
 
     static fromParsed(val,mentioned){
-        let newObj = new ChannelMentionArgument(val.value)
+        let newObj = new ChannelMentionArgument(mentioned.toString())
+        newObj.channelid = val.value
         newObj.mentioned = mentioned
         return newObj
     }

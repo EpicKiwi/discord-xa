@@ -9,7 +9,8 @@ module.exports = class RoleMentionArgument extends LiteralArgument {
     }
 
     static fromParsed(val,mentioned){
-        let newObj = new RoleMentionArgument(val.value)
+        let newObj = new RoleMentionArgument(mentioned.toString())
+        newObj.roleId = val.value
         newObj.mentioned = mentioned
         return newObj
     }
