@@ -3,6 +3,7 @@ const {Inject} = require("injection-js")
 const MessageOutputStream = require("../../CoreModule/MessageOutputStream")
 const settings = require("../../../../settings")
 const jwt = require("jsonwebtoken")
+const HttpServer = require("../HttpServer")
 
 module.exports = class GetAuthKeyCommand extends Command {
 
@@ -12,31 +13,20 @@ module.exports = class GetAuthKeyCommand extends Command {
 
     static get parameters(){
         return [
-            new Inject(MessageOutputStream)
+            new Inject(MessageOutputStream),
+            new Inject(HttpServer)
         ]
     }
 
-    execute(commandMessage){ return new Promise((resolve,reject) => {
+    async execute(commandMessage){ 
         let {channel,guild,author} = commandMessage.originalMessage
 
-        let payload = {
-            gld: guild.id,
-            usr: author.id,
-            mss: commandMessage.originalMessage.id,
-            iat: Math.round(Date.now()/1000),
-            exp: Math.round((Date.now()+settings.http.jwt.lifetime)/1000),
-            iss: "xa-com"
-        }
-
-        jwt.sign(payload,settings.http.jwt.secret,(err,key) => {
-            if(err)
-                return reject(err)
-            
-            this.messageOutputStream.send(channel,
-                `Clé d'authentification pour ${guild.name} \`\`\`${key}\`\`\``)
-            
-            resolve()
+        let key = await this.httpServer.getAuthKey(guild.id,author.id,"xa-com",{
+            mss: commandMessage.originalMessage.id
         })
-    })}
+        
+        this.messageOutputStream.send(channel,
+            `Clé d'authentification pour ${guild.name} \`\`\`${key}\`\`\``)
+    }
 
 }
