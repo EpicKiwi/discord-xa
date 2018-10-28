@@ -31,11 +31,11 @@
     "mathjs": "^4.3.0",
     "nedb": "^1.8.0",
     "nedb-promise": "^2.0.1",
-    "node-opus": "^0.2.7",
-    "nodemon": "^1.17.3",
+    "nodemon": "^1.18.5",
     "notevil": "^1.1.0",
     "parse-ms": "^2.0.0",
-    "request": "^2.83.0",
+    "pretty-ms": "^4.0.0",
+    "request": "^2.88.0",
     "ytdl-core": "^0.14.4"
   }
 }
