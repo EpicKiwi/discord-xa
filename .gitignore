@@ -63,3 +63,4 @@ settings.json
 
 /data/*
 !/data/.gitkeep
+settings.js.old

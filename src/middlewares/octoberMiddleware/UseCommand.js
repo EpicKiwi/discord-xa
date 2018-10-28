@@ -69,6 +69,7 @@ class UseCommand extends Command {
             player.inventory = null
 
         targetPlayer.health -= result.damages
+        targetPlayer.health = Math.min(targetPlayer.health,targetPlayer.maxHealth)
 
         await PlayerStore.updatePlayerAction(player)
         if(player.user != targetPlayer.user) {

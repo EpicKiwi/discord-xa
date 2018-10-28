@@ -46,10 +46,10 @@ class Item {
         if(this.minDamage == 0 || this.minDamage)
             damage += this.minDamage
 
-        if(this.maxDamage && this.maxDamage > this.minDamage)
+        if(this.maxDamage && this.maxDamage != this.minDamage)
             damage += "-"+this.maxDamage
 
-        if(this.criticalDamage && this.criticalDamage > this.maxDamage)
+        if(this.criticalDamage && this.criticalDamage != this.maxDamage)
             damage += " ("+this.criticalDamage+")"
 
         if(damage != "")
