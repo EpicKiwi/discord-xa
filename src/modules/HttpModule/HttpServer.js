@@ -2,37 +2,38 @@ const settings = require("../../../settings")
 const Logger = require("../../core/Logger")
 const restify = require("restify")
 const Injectable = require("../../core/Injectable")
-const {Inject} = require("injection-js")
+const {Inject,Injector} = require("injection-js")
 const jwt = require("jsonwebtoken")
 
-const API_PREFIX = "/api"
-const PROTECTED_URL = [API_PREFIX]
-
 module.exports = class HttpServer extends Injectable {
-    
+
+    get apiPrefix(){
+        return "/api"
+    }
+
+    get protectedsEndpoints(){
+        return [this.apiPrefix]
+    }
+
     constructor(...args){
         super(...args)
         this.server = restify.createServer()
+        this.endpoints = []
 
         this.server.use(restify.plugins.queryParser());
         this.server.use(this.checkAuth.bind(this))
+    }
 
-        this.server.get("/", (req,res,next) => {
-            res.send("Hello world")
-            return next()
-        })
-
-        this.server.get("/api", (req,res,next) => {
-            res.send("Hello API")
-            return next()
-        })
+    async addEndpoint(endpoint){
+        this.endpoints.push(endpoint)
+        await endpoint.init()
     }
 
     checkAuth(req,res,next){
         let {query} = req
         let path = req.path()
         
-        let requireAuth = PROTECTED_URL.find((el) => path.startsWith(el))
+        let requireAuth = this.protectedsEndpoints.find((el) => path.startsWith(el))
         if(!requireAuth){
             return next()
         }
