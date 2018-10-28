@@ -11,6 +11,14 @@ const TICK_SIZE = 60000
 
 module.exports = class StatsModule extends Module {
 
+    static get moduleName(){
+        return 'Stats module'
+    }
+
+    static get description(){
+        return 'Module permettant l\'enregistrement de tout un tas de statistiques super interessantes'
+    }
+
     static get provides(){
         return [
             StatsDatabase
@@ -29,7 +37,7 @@ module.exports = class StatsModule extends Module {
         this.countMessage(this.messageInputStream.asObservable())
         this.countMentions(this.messageInputStream.asObservable())
         this.registerGeneralData()
-        this.tick()
+        setTimeout(this.tick.bind(this),TICK_SIZE)
     }
 
     tick(){
