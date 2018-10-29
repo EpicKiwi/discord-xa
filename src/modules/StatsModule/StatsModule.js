@@ -36,6 +36,7 @@ module.exports = class StatsModule extends Module {
     }
 
     async init(){
+        await this.statsDatabase.load();
         this.countMessage(this.messageInputStream.asObservable())
         this.countMentions(this.messageInputStream.asObservable())
         this.registerGeneralData()

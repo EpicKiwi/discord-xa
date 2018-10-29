@@ -49,6 +49,43 @@ class ServerDatabase {
         this.set(key,newValue)
     }
 
+    query(strings,...expressions){
+        let keys = Object.keys(this.values)
+        let matcher = this.matchKey(strings,...expressions)
+
+        let foundKeys = keys.filter((key) => {
+            return matcher(key)
+        })
+
+        return foundKeys
+    }
+
+    matchKey(strings,...expressions){return (key) => {
+
+        return strings.reduce((acc,str,i) => {
+            if(acc === false) return false;
+            if(i == 0){
+                return key.startsWith(str) ? str : false
+            } else {
+                let exp = expressions[i-1]
+                if(typeof exp !== 'function'){
+                    return key.startsWith(acc+exp+str) ? acc+exp+str : false
+                } else {
+                    let substr = key.substr(acc.length)
+
+                    if(str != ""){
+                        let nextPos = substr.indexOf(str)
+                        if(nextPos == -1) return false
+                        substr = substr.substr(0,nextPos)
+                    }
+
+                    return exp(substr) ? acc+substr+str : false
+                }
+            }
+        },"")
+
+    }}
+
     async persist(){
         this.set(PERSISTED_KEY,Date.now(),{ignorePersist:true})
         let dataDirectory = settings.dataDir;
