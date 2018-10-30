@@ -18,7 +18,7 @@ module.exports = class Endpoint extends Injectable {
     }
 
     async init(){
-        let verbs = ["get","post","head","put","options"]
+        let verbs = ["get","post","head","put","opts"]
         verbs.forEach((verb) => {
             if(this[verb] && typeof this[verb] == "function"){
                 Logger.log(`${verb.toUpperCase()} ${this.url}`)

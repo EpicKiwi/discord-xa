@@ -65,6 +65,25 @@ module.exports = class DatabaseEndpoint extends ApiEndpoint {
         return next()
     }
 
+    opts(req,res,next){
+        if(!this.options.list){
+            let err = new Error()
+            err.message = `${this.constructor.database.name} doesn't allow to list keys`
+            err.statusCode = 403
+            return next(err)
+        }
+        let serverDb = this.db.get(req.jwt.gld)
+
+        let keys = Object.keys(serverDb.values)
+        
+        res.send({
+            keyNumber: keys.length,
+            availableKays:keys
+        })
+
+        return next()
+    }
+
     post(req,res,next){
         if(!this.options.write){
             let err = new Error()

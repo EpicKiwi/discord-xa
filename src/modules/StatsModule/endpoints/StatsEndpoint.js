@@ -10,7 +10,8 @@ module.exports = class StatsEndpoint extends DatabaseEndpoint {
     static get options(){
         return {
             read: true,
-            write: false
+            write: false,
+            list: true
         }
     }
     
