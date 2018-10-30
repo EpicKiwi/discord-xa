@@ -65,14 +65,17 @@ class OctoberMiddleware extends Middleware {
         let {startsBefore, endFrequency, startFrequency, date} = settings.octoberEvent
         let countdown = (new Date(date)).getTime() - Date.now()
         if(countdown < 0){
-            if(!this.bossMonster && countdown > -1800000){
+            if(!this.bossMonster && countdown > -86400000){
                 this.bossMonster = await this.spawnMonster(this.serverId,settings.octoberEvent.finalBoss)
             }
         } else if(countdown < startsBefore){
             let avancement = countdown/startsBefore
             let currentFrequency = Math.round(endFrequency+(avancement*(startFrequency-endFrequency)))
 
-            if(!this.lastSpawn || this.lastSpawn+currentFrequency < Date.now()) {
+            if(!this.lastSpawn){
+                this.lastSpawn = Date.now();
+                console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)
+            } else if(this.lastSpawn+currentFrequency < Date.now()) {
                 await this.spawnMonster(this.serverId)
                 this.lastSpawn = Date.now();
                 console.log(`Next spawn : ${prettyMs(currentFrequency - (Date.now()-this.lastSpawn))}`)

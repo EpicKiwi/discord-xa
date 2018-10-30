@@ -40,6 +40,10 @@ class StatusCommand extends Command {
         if(!player)
             return await this.action.reply("Qui ?? Connait pas...")
 
+            if(this.action.message.author.bot){
+                return await this.action.reply(`Malgré tout ses efforts, ${this.action.message.author} n'a pas réussi à soigner ${target} avec ses petits bras de robot`)
+            }
+
         if(Math.random() > 0.80)
             return await this.action.reply(`Malgré tout ses efforts, ${this.action.message.author} n'a pas réussi à soigner ${target}`)
 
