@@ -1,5 +1,6 @@
 const ApiEndpoint = require("./ApiEndpoint")
 const {Inject} = require("injection-js")
+const {any,sComp} = require("../../core/queryOperators")
 
 module.exports = class DatabaseEndpoint extends ApiEndpoint {
 
@@ -45,10 +46,15 @@ module.exports = class DatabaseEndpoint extends ApiEndpoint {
 
         let serverDb = this.db.get(req.jwt.gld)
 
-        let values = [{
-            key: req.params.key,
-            value: serverDb.get(req.params.key)
-        }]
+        let strings = req.params.key.split("*")
+        let expressions = Array(strings.length-1).fill(sComp(any()))
+
+        let values = serverDb.query(strings,...expressions).map((key) => {
+            return {
+                key,
+                value: serverDb.get(key)
+            }
+        })
 
         let response = {
             resultNumber: values.length,

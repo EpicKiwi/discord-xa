@@ -5,7 +5,7 @@ function increment(amount=1){
 }
 
 function avg(newVal){
-    return function(current){
+    return (current) => {
         if(!current)
             return newVal
         return (newVal+current)/2
