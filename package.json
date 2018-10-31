@@ -20,7 +20,9 @@
   "homepage": "https://github.com/EpicKiwi/discord-xa#readme",
   "dependencies": {
     "camelcase": "^5.0.0",
+    "canvas": "^2.0.1",
     "chalk": "^2.4.1",
+    "chart.js": "^2.7.3",
     "date-fns": "^1.29.0",
     "date-fns-timezone": "^0.1.4",
     "discord.js": "^11.4.2",

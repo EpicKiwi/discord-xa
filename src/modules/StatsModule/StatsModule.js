@@ -7,6 +7,7 @@ const {filter} = require("rxjs/operators")
 const dateFns = require("date-fns")
 const {Client} = require("discord.js")
 const StatsEndpoint = require("./endpoints/StatsEndpoint")
+const StatsCommand = require("./commands/StatsCommand")
 
 const TICK_SIZE = 60000
 
@@ -23,7 +24,8 @@ module.exports = class StatsModule extends Module {
     static get provides(){
         return [
             StatsDatabase,
-            StatsEndpoint
+            StatsEndpoint,
+            StatsCommand
         ]
     }
 
