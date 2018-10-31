@@ -24,7 +24,8 @@ module.exports = class setTimezoneCommand extends Command {
         let param = commandMessage.args.find((el) => el.type == "literal");
         if(!param && !commandMessage.hasSwitch("d")){
             this.messageOutputStream.send(commandMessage.originalMessage.channel,
-                "**Erreur** Veuillez renseigner un nom de TimeZone")
+                "**Erreur** Veuillez renseigner un nom de TimeZone",
+                {autoDestroy:8000})
             return 1;
         }
 
@@ -34,7 +35,8 @@ module.exports = class setTimezoneCommand extends Command {
             tz = listTimeZones().find((el) => el.toLowerCase() == param.value.toLowerCase())
             if(!tz){
                 this.messageOutputStream.send(commandMessage.originalMessage.channel,
-                    `**Erreur** Aucune zone ne porte le nom ${param.value}`)
+                    `**Erreur** Aucune zone ne porte le nom ${param.value}`,
+                    {autoDestroy:8000})
                 return 2;
             }
         }

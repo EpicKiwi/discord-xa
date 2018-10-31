@@ -7,9 +7,19 @@ const discord = require("discord.js")
      * @param {string} messageContent 
      */
 class MessageOutput {
-    constructor(channel,content){
+    constructor(channel,content,options){
         this.channel = channel;
-        this.content = content
+        this.content = content;
+        this.sent = false;
+        
+        if(options){
+            this.autoDestroy = options.autoDestroy;
+            this.attachment = options.attachment;
+        }
+    }
+
+    markAsSent(sentMessage){
+        this.message = sentMessage
     }
 }
 
@@ -26,9 +36,10 @@ class MessageOutputStream extends Stream {
      * Send a message to the specified channel
      * @param {discord.Channel} channel 
      * @param {string} message 
+     * @param {{autoDestroy:number,attachment:*}} options
      */
-    send(channel,message){
-        this.next(new MessageOutput(channel,message))
+    send(channel,message,options){
+        this.next(new MessageOutput(channel,message,options))
     }
 
 }

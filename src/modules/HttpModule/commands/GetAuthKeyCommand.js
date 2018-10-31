@@ -2,7 +2,6 @@ const Command = require("../../CommandModule/Command")
 const {Inject} = require("injection-js")
 const MessageOutputStream = require("../../CoreModule/MessageOutputStream")
 const settings = require("../../../../settings")
-const jwt = require("jsonwebtoken")
 const HttpServer = require("../HttpServer")
 
 module.exports = class GetAuthKeyCommand extends Command {
@@ -26,7 +25,8 @@ module.exports = class GetAuthKeyCommand extends Command {
         })
         
         this.messageOutputStream.send(channel,
-            `Clé d'authentification pour ${guild.name} \`\`\`${key}\`\`\``)
+            `Clé d'authentification pour ${guild.name} \`\`\`${key}\`\`\``,
+            {autoDestroy:settings.http.jwt.lifetime})
     }
 
 }

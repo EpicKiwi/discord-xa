@@ -88,7 +88,8 @@ class CommandModule extends Module {
                 result = await result;
         } else {
             Logger.warn(`Command "${commandMessage.commandName}" not found`)
-            this.messageOutputStream.send(channel,`**Erreur** La commande "${commandMessage.commandName}" n'existe pas`)
+            this.messageOutputStream.send(channel,`**Erreur** La commande "${commandMessage.commandName}" n'existe pas`,
+            {autoDestroy:8000})
             result = 404;
         }
 
