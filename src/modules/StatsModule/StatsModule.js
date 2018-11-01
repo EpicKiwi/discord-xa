@@ -8,6 +8,7 @@ const dateFns = require("date-fns")
 const {Client} = require("discord.js")
 const StatsEndpoint = require("./endpoints/StatsEndpoint")
 const StatsCommand = require("./commands/StatsCommand")
+const StatsHelper = require("./StatsHelper")
 
 const TICK_SIZE = 60000
 
@@ -25,7 +26,8 @@ module.exports = class StatsModule extends Module {
         return [
             StatsDatabase,
             StatsEndpoint,
-            StatsCommand
+            StatsCommand,
+            StatsHelper
         ]
     }
 

@@ -57,7 +57,12 @@ class ServerDatabase {
             return matcher(key)
         })
 
-        return foundKeys
+        let result = {}
+        foundKeys.forEach((key) => {
+            result[key] = this.get(key)
+        })
+
+        return result
     }
 
     matchKey(strings,...expressions){return (key) => {
@@ -68,8 +73,11 @@ class ServerDatabase {
                 return key.startsWith(str) ? str : false
             } else {
                 let exp = expressions[i-1]
+                let predicat = acc;
                 if(typeof exp !== 'function'){
-                    return key.startsWith(acc+exp+str) ? acc+exp+str : false
+                    predicat += exp+str
+                    if(!key.startsWith(predicat))
+                        return false
                 } else {
                     let substr = key.substr(acc.length)
 
@@ -77,10 +85,25 @@ class ServerDatabase {
                         let nextPos = substr.indexOf(str)
                         if(nextPos == -1) return false
                         substr = substr.substr(0,nextPos)
+                    } else {
+                        let nextPos = substr.indexOf(":")
+                        if(nextPos != -1){
+                            substr = substr.substr(0,nextPos)
+                        }
                     }
 
-                    return exp(substr) ? acc+substr+str : false
+                    if(!exp(substr))
+                        return false
+
+                    predicat += substr+str
                 }
+
+                if(i == strings.length-1){
+                    if(key != predicat)
+                        return false
+                }
+                
+                return predicat
             }
         },"")
 
